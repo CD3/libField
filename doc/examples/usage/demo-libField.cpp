@@ -2,6 +2,7 @@
 
 int main()
 {
+  // create a 100x100x200 array to store the temperature over the domain x = [-5,5], y = [-5,5], z = [0,20].
   Field<double,3> T(100,100,200);
   T.setCoordinateSystem( Uniform(-5,5), Uniform(-5,5), Uniform(0,20) );
 
@@ -18,7 +19,7 @@ int main()
     }
   }
         
-  // do work
+  // do work and profit
 
   
   return 0;
