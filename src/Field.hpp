@@ -98,6 +98,8 @@ class Field {
   auto& getCoordinateSystem() { return *cs; };
   auto getCoordinateSystemPtr() { return cs; };
   auto& getAxis(size_t i){ return cs->getAxis(i); }
+  template<typename... Args>
+  auto setCoordinateSystem(Args... args){cs->set(args...);}
 
   template <typename... Args>
   auto
@@ -118,6 +120,9 @@ class Field {
 
     return Field<QUANT,NDims,COORD,viewND,view1D>(cs_,d_);
   }
+
+  auto size() {return d->numElements();}
+  auto size(int i) {return d->shape()[i];}
 
 };
 
