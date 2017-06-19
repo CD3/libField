@@ -23,7 +23,7 @@ namespace RangeDiscretizers
         this->max = max;
       }
 
-      T operator()(size_t i, size_t N)
+      T operator()(size_t i, size_t N) const
       {
         return min + i*(max-min)/(N-1);
       }
