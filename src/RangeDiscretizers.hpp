@@ -40,6 +40,43 @@ namespace RangeDiscretizers
     return Uniform_imp<T>(min,max);
   }
 
+
+
+
+
+  template<typename T>
+  class Geometric_imp
+  {
+    public:
+      Geometric_imp( T min, T dx, T stretch )
+      {
+        this->min = min;
+        this->dx = dx;
+        this->stretch = stretch;
+      }
+
+      T operator()(size_t i, size_t N) const
+      {
+        // x[0] = xmin
+        // x[1] = xmin + dx
+        // x[2] = xmin + dx + s*dx
+        // x[3] = xmin + dx + s*dx + s*s*dx
+        // x[i] = xmin + dx*\sigma s^(i-1)
+        return min + pow( dx, i-1 );
+      }
+
+      
+    protected:
+        T min, dx, stretch;
+  };
+
+  // using a factory function here so that argument types can be deduced.
+  template<typename T,typename V>
+  Geometric_imp<T> Geometric( T min, V max )
+  {
+    return Geometric_imp<T>(min,max);
+  }
+
 }
 
 
