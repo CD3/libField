@@ -23,9 +23,9 @@ namespace RangeDiscretizers
         this->max = max;
       }
 
-      T operator()(size_t i, size_t N) const
+      auto operator()(size_t i, size_t N) const
       {
-        return min + i*(max-min)/(N-1);
+        return min + i*(1.*max-1.*min)/(N-1);
       }
 
       
@@ -55,14 +55,14 @@ namespace RangeDiscretizers
         this->stretch = stretch;
       }
 
-      T operator()(size_t i, size_t N) const
+      auto operator()(size_t i, size_t N) const
       {
         // x[0] = xmin
         // x[1] = xmin + dx
         // x[2] = xmin + dx + s*dx
         // x[3] = xmin + dx + s*dx + s*s*dx
         // x[i] = xmin + dx*\sigma s^(i-1)
-        return min + pow( dx, i-1 );
+        return min + pow( 1.*dx, i-1 );
       }
 
       
@@ -71,10 +71,10 @@ namespace RangeDiscretizers
   };
 
   // using a factory function here so that argument types can be deduced.
-  template<typename T,typename V>
-  Geometric_imp<T> Geometric( T min, V max )
+  template<typename T,typename V,typename U>
+  Geometric_imp<T> Geometric( T min, V dx, U stretch)
   {
-    return Geometric_imp<T>(min,max);
+    return Geometric_imp<T>(min,dx,stretch);
   }
 
 }

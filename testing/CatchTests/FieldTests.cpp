@@ -27,7 +27,7 @@ TEST_CASE( "Field Usage" ) {
     }
   }
 
-  Pressure.set( [](auto i, auto cs){
+  Pressure.set_f( [](auto i, auto cs){
         auto x = cs->getCoord(i[0],i[1],i[2]);
         return 2*x[0]*x[1]*x[2];
       });
