@@ -23,10 +23,14 @@ TEST_CASE( "Field Usage" ) {
       {
         auto x = Temperature.getCoord(i,j,k);
         Temperature[i][j][k] = x[0]*x[1]*x[2];
-        Pressure[i][j][k] = 2*x[0]*x[1]*x[2];
       }
     }
   }
+
+  Pressure.set( [](auto i, auto cs){
+        auto x = cs->getCoord(i[0],i[1],i[2]);
+        return 2*x[0]*x[1]*x[2];
+      });
 
   CHECK( Temperature.getCoordinateSystem()[2][0] == Approx(0.0) );
   CHECK( Temperature.getCoordinateSystem()[2][1] == Approx(0.5) );

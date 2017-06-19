@@ -70,6 +70,31 @@ class Field {
   };
   virtual ~Field(){};
 
+  template<typename F>
+  void set( F f )
+  {
+    auto shape = d->shape();
+    auto N = d->num_elements();
+    for(int i = 0; i < N; ++i)
+    {
+      array<size_t,NUMDIMS> ind;
+      int ii = i;
+      int NN = shape[0];
+      for(int j = 1; j < NUMDIMS; ++j)
+        NN *= shape[j];
+      for(int j = 0; j < NUMDIMS; ++j)
+      {
+        NN /= shape[j];
+        ind[j] = ii / NN;
+        ii -= ind[j]*NN;
+      }
+
+      d->operator()(ind) = f( ind, cs );
+
+
+    }
+  }
+
   // ELEMENT ACCESS
 
   // using an index container ( C array, std::vector, boost::array, etc )
