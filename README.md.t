@@ -21,7 +21,7 @@ support for field slicing.
 Physics simulations often require you to work with large arrays of data that correspond to some physical quantity
 that is defined at multiple points in space (i.e. a field). For example, a finite-difference heat solver would
 create store an initial temperature distribution and then "update" this distribution as it stepped forward in time.
-The finite-difference time-domain method for electrodynamics operates on an arrays of data for the electric and
+The finite-difference time-domain method for electrodynamics operates on an array of data for the electric and
 magnetic fields.
 
 Since these algorithms are used for a physics simulation, they depend on the coordinate system. For example,
@@ -30,8 +30,8 @@ of the spacing between consecutive field elements in the x direction.
 
 `libField` aims to provide a simple, clean API for creating, storing, accessing, and manipulating field data that
 would be used to write physics simulations, and this simple API is stressed above all else. Currently, minimal
-effort has been made to make it "fast". The code tries to be efficient and fast, but no great effort has been
-made to optimize it... yet. `libField` is in the very early stages of development, and once the API stabilizes,
+effort has been made to make it “fast". The code tries to be efficient and fast, but no great effort has been
+made to optimize it... yet. `libField` is in the early stages of development, and once the API stabilizes,
 and has a full test harness, the underlying implementation can be optimized.
 
 # Tutorial
@@ -39,7 +39,7 @@ and has a full test harness, the underlying implementation can be optimized.
 ## Compiling
 
 To use `libField`, you only just need to include `Field.hpp` in your program. Note that `libField` depends on
-`boost`, but only the header library. Specifically, `Field.hpp` will include `boost/array.hpp`, `boost/multi_array.hpp`, `boost/optional.hpp', and 'boost/assert.hpp'.
+`boost`, but only the header library. Specifically, `Field.hpp` will include `boost/array.hpp`, `boost/multi_array.hpp`, `boost/optional.hpp`, and 'boost/assert.hpp'.
 
 ```C++
 #include <Field.hpp>
@@ -66,7 +66,7 @@ set_target_properties( myProg PROPERTIES CXX_STANDARD 14)
 If you are not using `cmake`, then you need to start. If you are still just writing your simulations in a single file (called `main.cpp` or `myProg.cpp` for example),
 then you can just copy this directory to your project directory and compile it using `gcc`
 
-```
+```C++
 > gcc -IlibField/src/ -std=c++14 main.cpp -o myProg
 ```
 
@@ -79,7 +79,7 @@ dimensions in the field. For example, to create a two-dimensional field that
 stores `double`s with 11 elements in the x direction and 15 elements in the y
 direction you would just pass the dimension sizes to the constructor.
 
-```
+```C++
 Field<double,2> T(11,15);
 ```
 
@@ -94,7 +94,7 @@ helper functions to take care of these common cases.
 ```
 
 (Note: by using 11 for the size in the x direction, x = 0 will be included in the axis (at index 5))
-We will probably want to initialize the field data. Typically we would want to start off with zero. This
+We will probably want to initialize the field data. Typically, we would want to start off with zero. This
 can be done with the `set()` method.
 
 ```C++
