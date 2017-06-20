@@ -20,7 +20,7 @@ support for field slicing.
 
 Physics simulations often require you to work with large arrays of data that correspond to some physical quantity
 that is defined at multiple points in space (i.e. a field). For example, a finite-difference heat solver would
-create store an initial temperature distribution and then "update" this distribution as it stepped forward in time.
+create an initial temperature distribution and then "update" this distribution as it stepped forward in time.
 The finite-difference time-domain method for electrodynamics operates on an array of data for the electric and
 magnetic fields.
 
@@ -64,7 +64,7 @@ set_target_properties( myProg PROPERTIES CXX_STANDARD 14)
 ```
 
 If you are not using `cmake`, then you need to start. If you are still just writing your simulations in a single file (called `main.cpp` or `myProg.cpp` for example),
-then you can just copy this directory to your project directory and compile it using `gcc`
+then you can just copy this directory to your project directory and compile using `gcc`
 
 ```C++
 > gcc -IlibField/src/ -std=c++14 main.cpp -o myProg
@@ -74,7 +74,7 @@ then you can just copy this directory to your project directory and compile it u
 
 The main class provided by `libField` is the `Field` class. This is basically a
 multi-dimensional array with a coordinate system attached. The class takes two
-template arguments for the type used to store data, and the number of
+template arguments: the type used to store data, and the number of
 dimensions in the field. For example, to create a two-dimensional field that
 stores `double`s with 11 elements in the x direction and 15 elements in the y
 direction you would just pass the dimension sizes to the constructor.
@@ -86,7 +86,7 @@ Field<double,2> T(11,15);
 This will automatically allocate memory for both the field data, and the coordinate system. However, we still
 need to initialize the coordinate system axes. This is done with the `setCoordinateSystem()` method of the
 `Field` class. We usually want to discretize the coordinate axes in some regular fashion. For example, we may
-want to discretize the x axis uniformly from -3 to 3, and y axis uniformly from 0 to 10. `libField` provides
+want to discretize the x axis uniformly from -3 to 3, and the y axis uniformly from 0 to 10. `libField` provides
 helper functions to take care of these common cases.
 
 ```C++
