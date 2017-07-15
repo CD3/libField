@@ -51,6 +51,26 @@ TEST_CASE( "CoordinateSystem Usage" ) {
   Coordinates.getAxisPtr(0)->operator[](0) = -1;
   CHECK( Coordinates[0][0] == -1 );
 
+  auto ind = Coordinates.lower_bound( 0.1, 0.1, 0.1 );
+  CHECK( ind[0] == 0 );
+  CHECK( ind[1] == 0 );
+  CHECK( ind[2] == 0 );
+
+  ind = Coordinates.lower_bound( 1.1, 1.1, 1.1 );
+  CHECK( ind[0] == 1 );
+  CHECK( ind[1] == 0 );
+  CHECK( ind[2] == 2 );
+
+  ind = Coordinates.upper_bound( 0.1, 0.1, 0.1 );
+  CHECK( ind[0] == 1 );
+  CHECK( ind[1] == 1 );
+  CHECK( ind[2] == 1 );
+
+  ind = Coordinates.upper_bound( 1.1, 1.1, 1.1 );
+  CHECK( ind[0] == 2 );
+  CHECK( ind[1] == 1 );
+  CHECK( ind[2] == 3 );
+
 
   // we can also pass in shared pointers for the axes.
   typedef CoordinateSystem<double,3>::axis_type axis_type;
@@ -87,6 +107,28 @@ TEST_CASE( "CoordinateSystem Usage" ) {
     CHECK( Coordinates2[2][i] == Approx(ymin + i*dy) );
 
 
+  auto ind2 = Coordinates2.lower_bound( 0.1, 0.1, 0.1 );
+  CHECK( ind2[0] == 0 );
+  CHECK( ind2[1] == 2 );
+  CHECK( ind2[2] == 0 );
+
+  ind2 = Coordinates2.lower_bound( 1.1, 1.1, 1.1 );
+  CHECK( ind2[0] == 0 );
+  CHECK( ind2[1] == 2 );
+  CHECK( ind2[2] == 0 );
+
+  ind2 = Coordinates2.upper_bound( 0.1, 0.1, 0.1 );
+  CHECK( ind2[0] == 1 );
+  CHECK( ind2[1] == 3 );
+  CHECK( ind2[2] == 1 );
+
+  ind2 = Coordinates2.upper_bound( 1.1, 1.1, 1.1 );
+  CHECK( ind2[0] == 1 );
+  CHECK( ind2[1] == 3 );
+  CHECK( ind2[2] == 1 );
+
+
+
   
 }
 
@@ -115,6 +157,12 @@ TEST_CASE( "CoordinateSystem Slicing" ) {
   for(int i = 0; i < Nz; i++)
     CHECK( Coordinates[2][i] == Approx(zmin + i*dz) );
 
+  auto ind = Coordinates.lower_bound( 2, 3, 4 );
+  CHECK( ind[0] == 2 );
+  CHECK( ind[1] == 1 );
+  CHECK( ind[2] == 8 );
+
+
   auto Coordinates2 = Coordinates.slice( indices[IRange()][2][IRange()] );
 
   REQUIRE( Coordinates2[0].size() == Nx);
@@ -124,7 +172,15 @@ TEST_CASE( "CoordinateSystem Slicing" ) {
   for(int i = 0; i < Nz; i++)
     CHECK( Coordinates2[1][i] == Approx(zmin + i*dz) );
 
+  auto ind2 = Coordinates2.lower_bound( 2, 4 );
+  CHECK( ind2[0] == 2 );
+  CHECK( ind2[1] == 8 );
+
   auto Coordinates3 = Coordinates.slice( indices[IRange(2,Nx)][1][IRange(1,10,2)] );
+
+  auto ind3 = Coordinates3.lower_bound( 2, 4 );
+  CHECK( ind3[0] == 0 );
+  CHECK( ind3[1] == 3 );
 
   REQUIRE( Coordinates3[0].size() == Nx - 2);
   for(int i = 2; i < Nx; i++)
@@ -149,6 +205,8 @@ TEST_CASE( "CoordinateSystem Slicing" ) {
   CHECK(Coordinates[2][2] == zmin + 2*dz);
   CHECK(Coordinates[2][3] == 0);
   CHECK(Coordinates[2][4] == zmin + 4*dz);
+
+
 
 
 

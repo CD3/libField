@@ -14,6 +14,16 @@ TEST_CASE( "Field Usage" ) {
   Temperature.getCoordinateSystem().set( Uniform(0.,10.), Uniform(0.,10.), Uniform(0.,10.) );
   Field<double,3> Pressure( Temperature.getCoordinateSystemPtr() );
 
+  auto ind = Temperature.lower_bound( 5, 5, 5 );
+  CHECK( ind[0] == 5 );
+  CHECK( ind[1] == 2 );
+  CHECK( ind[2] == 10 );
+
+  ind = Temperature.upper_bound( 5, 5, 5 );
+  CHECK( ind[0] == 6 );
+  CHECK( ind[1] == 3 );
+  CHECK( ind[2] == 11 );
+
 
   for( int i = 0; i < Nx; ++i )
   {

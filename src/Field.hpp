@@ -153,6 +153,18 @@ class Field
         return cs->getCoord(args...);
     }
 
+    template <typename... Args>
+    auto lower_bound(Args... args) const
+    {
+        return cs->lower_bound(args...);
+    }
+
+    template <typename... Args>
+    auto upper_bound(Args... args) const
+    {
+        return cs->upper_bound(args...);
+    }
+
     // data access
     const auto &getData() const { return *d; };
     auto &getData() { return *d; };

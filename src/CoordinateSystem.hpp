@@ -62,6 +62,7 @@ class CoordinateSystem {
 
   virtual ~CoordinateSystem(){};
 
+  /** Returns size of the i'th axis. */
   auto size(int i) const
   {
     if (i < 0) {
@@ -79,24 +80,34 @@ class CoordinateSystem {
     return axes[i]->size();
   }
 
+  /** Set coorinate values
+   *
+   * This function accepts a set of Range objects that are used to
+   * set the coordinate values.
+   * */
   template <typename... Args>
   auto set(Args... args)
   {
     set_imp<0>(args...);
   };
 
+  /** Return i'th axis */
   const auto& operator[](size_t i) const { return *axes[i]; }
   auto& operator[](size_t i) { return *axes[i]; }
 
+  /** Return i'th axis */
   const auto& getAxis(size_t i) const { return *axes[i]; }
   auto& getAxis(size_t i) { return *axes[i]; }
 
+  /** Return pointer to i'th axis */
   const auto getAxisPtr(size_t i) const { return axes[i]; }
   auto getAxisPtr(size_t i) { return axes[i]; }
 
+  /** Return pointer to axes array */
   const auto getAxes() const { return axes; }
   auto getAxes() { return axes; }
 
+  /** Return coordinate specified by indecies given as arguments */
   template <typename... Args>
   auto operator()(Args... args) const
   {
@@ -105,6 +116,7 @@ class CoordinateSystem {
     return c;
   }
 
+  /** Return coordinate specified by indecies given as arguments */
   template <typename... Args>
   auto getCoord(Args... args) const
   {
@@ -113,6 +125,7 @@ class CoordinateSystem {
     return c;
   }
 
+  /** Return a sliced coordinate system view based on an index generator. */
   template <int NDims>
   const auto
   slice(const detail::multi_array::index_gen<NUMDIMS, NDims>& ind) const
@@ -136,6 +149,7 @@ class CoordinateSystem {
     return CoordinateSystem<COORD, NDims, view1D>(new_axes);
   }
 
+  /** Return a sliced coordinate system view based on an index generator. */
   template <int NDims>
   auto
   slice(const detail::multi_array::index_gen<NUMDIMS, NDims>& ind)
@@ -159,7 +173,26 @@ class CoordinateSystem {
     return CoordinateSystem<COORD, NDims, view1D>(new_axes);
   }
 
-  // helper functions/implementation
+  /** WARNING: this does not have the same meaning as std::lower_bound.*/
+  template <typename... Args>
+  auto
+  lower_bound(Args... args) const
+  {
+    array<size_t, NUMDIMS> ind;
+    lower_bound_imp<0>(ind, args...);
+    return ind;
+  }
+
+  template <typename... Args>
+  auto
+  upper_bound(Args... args) const
+  {
+    array<size_t, NUMDIMS> ind;
+    upper_bound_imp<0>(ind, args...);
+    return ind;
+  }
+
+  // helper functions/implementations
   protected:
   template <int II, typename N, typename... Args>
   typename std::enable_if<is_integral<N>::value, void>::type
@@ -226,7 +259,39 @@ class CoordinateSystem {
         "CoordinateSystem<COORD,NUMDIMS> "
         "getCoord called with wrong "
         "number of arguments.");
-  };
+  }
+
+  template <int II, typename IND, typename C, typename... Args>
+  void lower_bound_imp(IND& ind, C c, Args... args) const
+  {
+    ind[II] = std::upper_bound( axes[II]->begin(), axes[II]->end(), c ) - axes[II]->begin() - 1;
+    lower_bound_imp<II + 1>(ind, args...);
+  }
+
+  template <int II, typename IND>
+  void lower_bound_imp(IND& ind) const
+  {
+    BOOST_STATIC_ASSERT_MSG(II == NUMDIMS,
+        "CoordinateSystem<COORD,NUMDIMS> "
+        "lower_bound called with wrong "
+        "number of arguments.");
+  }
+
+  template <int II, typename IND, typename C, typename... Args>
+  void upper_bound_imp(IND& ind, C c, Args... args) const
+  {
+    ind[II] = std::upper_bound( axes[II]->begin(), axes[II]->end(), c ) - axes[II]->begin();
+    upper_bound_imp<II + 1>(ind, args...);
+  }
+
+  template <int II, typename IND>
+  void upper_bound_imp(IND& ind) const
+  {
+    BOOST_STATIC_ASSERT_MSG(II == NUMDIMS,
+        "CoordinateSystem<COORD,NUMDIMS> "
+        "upper_bound called with wrong "
+        "number of arguments.");
+  }
 };
 
 #endif // include protector
