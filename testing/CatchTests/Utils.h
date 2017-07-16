@@ -1,3 +1,5 @@
+#include "catch.hpp"
+
 #include <type_traits>
 #include <typeinfo>
 #ifndef _MSC_VER
@@ -32,4 +34,47 @@ type_name()
     else if (std::is_rvalue_reference<T>::value)
         r += "&&";
     return r;
+}
+
+template<typename ARRAY>
+class ArrayEqual : public Catch::MatcherBase< ARRAY > {
+    ARRAY a;
+public:
+    ArrayEqual( ARRAY a_ ): a(a_) {}
+
+    // Performs the test for this matcher
+    virtual bool match( ARRAY const& a_ ) const override {
+      if( a_.size() != a.size() )
+        return false;
+
+      for(int i = 0; i < a_.size(); i++)
+      {
+        if( a[i] != a_[i] )
+        {
+          return false;
+        }
+      }
+        
+      return true;
+    }
+
+    // Produces a string describing what this matcher does. It should
+    // include any provided data (the begin/ end in this case) and
+    // be written as if it were stating a fact (in the output it will be
+    // preceded by the value under test).
+    virtual std::string describe() const {
+        std::ostringstream ss;
+        ss << "is same as {";
+        for(int i = 0; i < a.size(); i++)
+          ss << a[i] << ", ";
+        ss << "}";
+        return ss.str();
+    }
+};
+
+// The builder function
+template<typename ARRAY>
+ArrayEqual<ARRAY>
+IsEqualToArray( ARRAY a_ ) {
+    return ArrayEqual<ARRAY>( a_ );
 }

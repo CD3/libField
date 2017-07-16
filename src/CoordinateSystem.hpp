@@ -178,7 +178,7 @@ class CoordinateSystem {
   auto
   lower_bound(Args... args) const
   {
-    array<size_t, NUMDIMS> ind;
+    array<int, NUMDIMS> ind;
     lower_bound_imp<0>(ind, args...);
     return ind;
   }
@@ -187,8 +187,17 @@ class CoordinateSystem {
   auto
   upper_bound(Args... args) const
   {
-    array<size_t, NUMDIMS> ind;
+    array<int, NUMDIMS> ind;
     upper_bound_imp<0>(ind, args...);
+    return ind;
+  }
+
+  template <typename... Args>
+  auto
+  nearest(Args... args) const
+  {
+    array<int, NUMDIMS> ind;
+    nearest_imp<0>(ind, args...);
     return ind;
   }
 
@@ -290,6 +299,43 @@ class CoordinateSystem {
     BOOST_STATIC_ASSERT_MSG(II == NUMDIMS,
         "CoordinateSystem<COORD,NUMDIMS> "
         "upper_bound called with wrong "
+        "number of arguments.");
+  }
+
+  template <int II, typename IND, typename C, typename... Args>
+  void nearest_imp(IND& ind, C c, Args... args) const
+  {
+    // special cases:
+    // coordinate is less than smallest
+    if( c < axes[II]->operator[](0) )
+    {
+      ind[II] = 0;
+    }
+    // coordinate is greater than largest
+    else if( c > axes[II]->operator[]( axes[II]->size()-1 ) )
+    {
+      ind[II] = axes[II]->size()-1;
+    }
+    else
+    {
+      // get index of element that is just below coordinate
+      ind[II] = std::upper_bound( axes[II]->begin(), axes[II]->end(), c ) - axes[II]->begin() - 1;
+      // now determine if coordinate is closer to the upper bound or lower bound
+      // coord - lower bound divided by upper bound minus lower bound gives the dimensionless coordinate between 0 and 1.
+      // if this is less than 0.5, we want to return the lower bound index. if itis greater than 0.5, we want to return the upper bound index
+      // don't have to worry about special cases above here.
+      ind[II] += 2*(c - axes[II]->operator[](ind[II]))/(axes[II]->operator[](ind[II]+1) - axes[II]->operator[](ind[II]));
+    }
+
+    nearest_imp<II + 1>(ind, args...);
+  }
+
+  template <int II, typename IND>
+  void nearest_imp(IND& ind) const
+  {
+    BOOST_STATIC_ASSERT_MSG(II == NUMDIMS,
+        "CoordinateSystem<COORD,NUMDIMS> "
+        "nearest called with wrong "
         "number of arguments.");
   }
 };

@@ -212,3 +212,128 @@ TEST_CASE( "CoordinateSystem Slicing" ) {
 
 }
 
+
+TEST_CASE( "CoordinateSystem Index Searcing" ) {
+
+  CoordinateSystem<double,3> Coordinates(11,6,21);
+  Coordinates.set( Uniform(0.,10.), Uniform(0.,10.), Uniform(0.,10.) );
+
+  std::cout << "===================================" << std::endl;
+
+  typedef boost::array<int,3> A;
+  A ind;
+
+
+  ind = Coordinates.lower_bound( -1, -1, -1 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {-1,-1,-1} ) );
+  ind = Coordinates.upper_bound( -1, -1, -1 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {0,0,0} ) );
+  ind = Coordinates.nearest( -1, -1, -1 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {0,0,0} ) );
+
+  ind = Coordinates.lower_bound( 0.1, 0.1, 0.1 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {0,0,0} ) );
+  ind = Coordinates.upper_bound( 0.1, 0.1, 0.1 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {1,1,1} ) );
+  ind = Coordinates.nearest( 0.1, 0.1, 0.1 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {0,0,0} ) );
+
+  ind = Coordinates.lower_bound( 0.2, 0.2, 0.2 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {0,0,0} ) );
+  ind = Coordinates.upper_bound( 0.2, 0.2, 0.2 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {1,1,1} ) );
+  ind = Coordinates.nearest( 0.2, 0.2, 0.2 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {0,0,0} ) );
+
+  ind = Coordinates.lower_bound( 0.3, 0.3, 0.3 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {0,0,0} ) );
+  ind = Coordinates.upper_bound( 0.3, 0.3, 0.3 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {1,1,1} ) );
+  ind = Coordinates.nearest( 0.3, 0.3, 0.3 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {0,0,1} ) );
+
+  ind = Coordinates.lower_bound( 0.4, 0.4, 0.4 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {0,0,0} ) );
+  ind = Coordinates.upper_bound( 0.4, 0.4, 0.4 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {1,1,1} ) );
+  ind = Coordinates.nearest( 0.4, 0.4, 0.4 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {0,0,1} ) );
+
+  ind = Coordinates.lower_bound( 0.5, 0.5, 0.5 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {0,0,1} ) );
+  ind = Coordinates.upper_bound( 0.5, 0.5, 0.5 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {1,1,2} ) );
+  ind = Coordinates.nearest( 0.5, 0.5, 0.5 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {1,0,1} ) );
+
+  ind = Coordinates.lower_bound( 0.6, 0.6, 0.6 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {0,0,1} ) );
+  ind = Coordinates.upper_bound( 0.6, 0.6, 0.6 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {1,1,2} ) );
+  ind = Coordinates.nearest( 0.6, 0.6, 0.6 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {1,0,1} ) );
+
+  ind = Coordinates.lower_bound( 0.7, 0.7, 0.7 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {0,0,1} ) );
+  ind = Coordinates.upper_bound( 0.7, 0.7, 0.7 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {1,1,2} ) );
+  ind = Coordinates.nearest( 0.7, 0.7, 0.7 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {1,0,1} ) );
+
+  ind = Coordinates.lower_bound( 0.8, 0.8, 0.8 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {0,0,1} ) );
+  ind = Coordinates.upper_bound( 0.8, 0.8, 0.8 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {1,1,2} ) );
+  ind = Coordinates.nearest( 0.8, 0.8, 0.8 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {1,0,2} ) );
+
+  ind = Coordinates.lower_bound( 0.9, 0.9, 0.9 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {0,0,1} ) );
+  ind = Coordinates.upper_bound( 0.9, 0.9, 0.9 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {1,1,2} ) );
+  ind = Coordinates.nearest( 0.9, 0.9, 0.9 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {1,0,2} ) );
+
+  ind = Coordinates.lower_bound( 1.0, 1.0, 1.0 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {1,0,2} ) );
+  ind = Coordinates.upper_bound( 1.0, 1.0, 1.0 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {2,1,3} ) );
+  ind = Coordinates.nearest( 1.0, 1.0, 1.0 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {1,1,2} ) );
+
+
+
+
+  ind = Coordinates.lower_bound( 1.01, 1.01, 1.01 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {1,0,2} ) );
+  ind = Coordinates.upper_bound( 1.01, 1.01, 1.01 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {2,1,3} ) );
+
+  ind = Coordinates.lower_bound( 2.01, 2.01, 2.01 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {2,1,4} ) );
+  ind = Coordinates.upper_bound( 2.01, 2.01, 2.01 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {3,2,5} ) );
+
+  ind = Coordinates.lower_bound( 9.01, 9.01, 9.01 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {9,4,18} ) );
+  ind = Coordinates.upper_bound( 9.01, 9.01, 9.01 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {10,5,19} ) );
+
+  ind = Coordinates.lower_bound( 10.01, 10.01, 10.01 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {10,5,20} ) );
+  ind = Coordinates.upper_bound( 10.01, 10.01, 10.01 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {11,6,21} ) );
+
+  ind = Coordinates.lower_bound( 11, 11, 11 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {10,5,20} ) );
+  ind = Coordinates.upper_bound( 11, 11, 11 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {11,6,21} ) );
+  ind = Coordinates.nearest( 11, 11, 11 );
+  CHECK_THAT( ind, IsEqualToArray<A>( {10,5,20} ) );
+
+
+
+
+
+  
+}

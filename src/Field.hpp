@@ -153,16 +153,25 @@ class Field
         return cs->getCoord(args...);
     }
 
+    // returns index of stored coordinate that lower bounds the given coordinate
     template <typename... Args>
     auto lower_bound(Args... args) const
     {
         return cs->lower_bound(args...);
     }
 
+    // returns index of stored coordinate that upper bounds the given coordinate
     template <typename... Args>
     auto upper_bound(Args... args) const
     {
         return cs->upper_bound(args...);
+    }
+
+    // returns index of stored coordinate that is closest to the given coordinate
+    template <typename... Args>
+    auto nearest(Args... args) const
+    {
+        return cs->nearest(args...);
     }
 
     // data access
