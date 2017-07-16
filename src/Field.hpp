@@ -210,17 +210,19 @@ class Field
     friend std::ostream &operator<<(std::ostream &output, const Field &F)
     {
         auto N = F.d->num_elements();
+        auto last_ind = F._1d2nd(0);
         for (int i = 0; i < N; ++i) {
           auto ind = F._1d2nd(i);
-          // insert blank lines between coordinate blocks
-          if( i > 0)
-            for(int j = NUMDIMS-1; j > 0; --j)
-             if( ind[j] == 0 )
-              output <<"\n";
+          // we want to print out blank lines whenever an index gets reset
+          for(int j = 0; j < NUMDIMS; ++j)
+            if( ind[j] < last_ind[j] )
+              output << "\n";
 
           for(int j = 0; j < NUMDIMS; ++j)
             output << F.cs->getAxis(j)[ind[j]] << " ";
           output << F.d->operator()(ind) << "\n";
+
+          last_ind = ind;
         }
         return output;
     }

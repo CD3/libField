@@ -172,3 +172,92 @@ TEST_CASE("Field Slicing")
 
 }
 
+
+TEST_CASE( "Field Output Operator" ) {
+
+  std::stringstream ss;
+  std::string expected;
+
+  Field<double,1> F1D( 3 );
+  F1D.getCoordinateSystem().set( Uniform(0.,10.) );
+  F1D.set_f( [](auto i, auto cs){ return 2*i[0]; });
+
+  ss << F1D;
+  expected = R"(0 0
+5 2
+10 4
+)";
+
+  CHECK( ss.str() == expected );
+
+
+  Field<double,2> F2D( 3, 3 );
+  F2D.getCoordinateSystem().set( Uniform(0.,10.), Uniform(-5.,5.) );
+  F2D.set_f( [](auto i, auto cs){ return 2*i[0]*i[1]; });
+
+  ss.str("");
+  ss << F2D;
+  expected = R"(0 -5 0
+0 0 0
+0 5 0
+
+5 -5 0
+5 0 2
+5 5 4
+
+10 -5 0
+10 0 4
+10 5 8
+)";
+
+  CHECK( ss.str() == expected );
+
+
+  Field<double,3> F3D( 3, 3, 3 );
+  F3D.getCoordinateSystem().set( Uniform(0.,10.), Uniform(-5.,5.), Uniform( 10, 20) );
+  F3D.set_f( [](auto i, auto cs){ return 2*i[0]*i[1]*i[2]; });
+
+  ss.str("");
+  ss << F3D;
+  expected = R"(0 -5 10 0
+0 -5 15 0
+0 -5 20 0
+
+0 0 10 0
+0 0 15 0
+0 0 20 0
+
+0 5 10 0
+0 5 15 0
+0 5 20 0
+
+
+5 -5 10 0
+5 -5 15 0
+5 -5 20 0
+
+5 0 10 0
+5 0 15 2
+5 0 20 4
+
+5 5 10 0
+5 5 15 4
+5 5 20 8
+
+
+10 -5 10 0
+10 -5 15 0
+10 -5 20 0
+
+10 0 10 0
+10 0 15 4
+10 0 20 8
+
+10 5 10 0
+10 5 15 8
+10 5 20 16
+)";
+
+  CHECK( ss.str() == expected );
+}
+
