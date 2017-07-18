@@ -32,6 +32,12 @@ struct is_index_cont<boost::array<int,N>> : std::true_type {};
 template< size_t N >
 struct is_index_cont<boost::array<size_t,N>> : std::true_type {};
 
+template< size_t N >
+struct is_index_cont<std::array<int,N>> : std::true_type {};
+
+template< size_t N >
+struct is_index_cont<std::array<size_t,N>> : std::true_type {};
+
 
 // trait querries
 

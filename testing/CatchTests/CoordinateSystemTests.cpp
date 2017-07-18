@@ -221,7 +221,7 @@ TEST_CASE( "CoordinateSystem Index Searcing" ) {
 
   std::cout << "===================================" << std::endl;
 
-  typedef boost::array<int,3> A;
+  typedef std::array<int,3> A;
   A ind;
 
 

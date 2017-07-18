@@ -35,7 +35,7 @@ class CoordinateSystem {
   typedef CoordinateSystem<COORD, NUMDIMS, ARRAY> this_type;
 
   protected:
-  boost::array<std::shared_ptr<axis_type>, NUMDIMS> axes;
+  std::array<std::shared_ptr<axis_type>, NUMDIMS> axes;
 
   public:
   template <typename... Args>
@@ -45,13 +45,13 @@ class CoordinateSystem {
   }
 
   template <typename I>
-  CoordinateSystem(boost::array<I, NUMDIMS> sizes)
+  CoordinateSystem(std::array<I, NUMDIMS> sizes)
   {
     for (int i = 0; i < NUMDIMS; i++)
       axes[i].reset(new axis_type(boost::extents[sizes[i]]));
   }
 
-  CoordinateSystem(boost::array<std::shared_ptr<axis_type>, NUMDIMS> axes_)
+  CoordinateSystem(std::array<std::shared_ptr<axis_type>, NUMDIMS> axes_)
   {
     for (int i = 0; i < NUMDIMS; i++)
       axes[i] = axes_[i];
@@ -108,7 +108,7 @@ class CoordinateSystem {
   template <typename... Args>
   auto operator()(Args... args) const
   {
-    boost::array<COORD, NUMDIMS> c;
+    std::array<COORD, NUMDIMS> c;
     getCoord_imp<0>(c, args...);
     return c;
   }
@@ -117,7 +117,7 @@ class CoordinateSystem {
   template <typename... Args>
   auto getCoord(Args... args) const
   {
-    boost::array<COORD, NUMDIMS> c;
+    std::array<COORD, NUMDIMS> c;
     getCoord_imp<0>(c, args...);
     return c;
   }
@@ -132,7 +132,7 @@ class CoordinateSystem {
     // NDims is the number of dimensions of the coordinate system we need to create.
     boost::multi_array_types::index_gen indices;
     // create an array of axis views that will be used to construct the new coordinate system.
-    boost::array<std::shared_ptr<view1D<COORD> >, NDims> new_axes;
+    std::array<std::shared_ptr<view1D<COORD> >, NDims> new_axes;
     int ii = 0;
     // loop through each axis
     for (int i = 0; i < NUMDIMS; i++) {
@@ -156,7 +156,7 @@ class CoordinateSystem {
     // NDims is the number of dimensions of the coordinate system we need to create.
     boost::multi_array_types::index_gen indices;
     // create an array of axis views that will be used to construct the new coordinate system.
-    boost::array<std::shared_ptr<view1D<COORD> >, NDims> new_axes;
+    std::array<std::shared_ptr<view1D<COORD> >, NDims> new_axes;
     int ii = 0;
     // loop through each axis
     for (int i = 0; i < NUMDIMS; i++) {
@@ -175,7 +175,7 @@ class CoordinateSystem {
   auto
   lower_bound(Args... args) const
   {
-    boost::array<int, NUMDIMS> ind;
+    std::array<int, NUMDIMS> ind;
     lower_bound_imp<0>(ind, args...);
     return ind;
   }
@@ -184,7 +184,7 @@ class CoordinateSystem {
   auto
   upper_bound(Args... args) const
   {
-    boost::array<int, NUMDIMS> ind;
+    std::array<int, NUMDIMS> ind;
     upper_bound_imp<0>(ind, args...);
     return ind;
   }
@@ -193,7 +193,7 @@ class CoordinateSystem {
   auto
   nearest(Args... args) const
   {
-    boost::array<int, NUMDIMS> ind;
+    std::array<int, NUMDIMS> ind;
     nearest_imp<0>(ind, args...);
     return ind;
   }

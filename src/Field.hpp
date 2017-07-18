@@ -45,11 +45,11 @@ class Field
     Field(Args... args)
     {
         cs.reset(new cs_type(args...));
-        boost::array<int, NUMDIMS> sizes({args...});
+        std::array<int, NUMDIMS> sizes({args...});
         d.reset(new array_type(sizes));
     }
     template <typename I>
-    Field(boost::array<I, NUMDIMS> sizes)
+    Field(std::array<I, NUMDIMS> sizes)
     {
         cs.reset(new cs_type(sizes));
         d.reset(new array_type(sizes));
@@ -97,7 +97,7 @@ class Field
 
     // ELEMENT ACCESS
 
-    // using an index container ( C array, std::vector, boost::array, etc )
+    // using an index container ( C array, std::vector, std::array, etc )
     template <typename I,
               typename std::enable_if<is_index_cont<I>::value,int>::type = 0>
     const auto &operator()(I i) const
@@ -119,7 +119,7 @@ class Field
               typename std::enable_if<std::is_integral<I>::value,int>::type = 0>
     const auto &operator()(I i, Args... args) const
     {
-        return (*d)(boost::array<I, NUMDIMS>({i,args...}));
+        return (*d)(std::array<I, NUMDIMS>({i,args...}));
     }
 
     template <typename I,
@@ -127,7 +127,7 @@ class Field
               typename std::enable_if<std::is_integral<I>::value,int>::type = 0>
     auto &operator()(I i, Args... args)
     {
-        return (*d)(boost::array<I, NUMDIMS>({i,args...}));
+        return (*d)(std::array<I, NUMDIMS>({i,args...}));
     }
 
     template <typename I>
@@ -231,7 +231,7 @@ class Field
     {
         auto shape = d->shape();
 
-        boost::array<size_t, NUMDIMS> ind;
+        std::array<size_t, NUMDIMS> ind;
         int NN = shape[0];
         for (int j = 1; j < NUMDIMS; ++j)
             NN *= shape[j];
