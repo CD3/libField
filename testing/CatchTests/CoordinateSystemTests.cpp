@@ -5,6 +5,7 @@
 
 #include "CoordinateSystem.hpp"
 
+using namespace boost;
 
 
 TEST_CASE( "CoordinateSystem Usage" ) {
@@ -163,7 +164,7 @@ TEST_CASE( "CoordinateSystem Slicing" ) {
   CHECK( ind[2] == 8 );
 
 
-  auto Coordinates2 = Coordinates.slice( indices[IRange()][2][IRange()] );
+  auto Coordinates2 = Coordinates.slice( indices[index_range()][2][index_range()] );
 
   REQUIRE( Coordinates2[0].size() == Nx);
   for(int i = 0; i < Nx; i++)
@@ -176,7 +177,7 @@ TEST_CASE( "CoordinateSystem Slicing" ) {
   CHECK( ind2[0] == 2 );
   CHECK( ind2[1] == 8 );
 
-  auto Coordinates3 = Coordinates.slice( indices[IRange(2,Nx)][1][IRange(1,10,2)] );
+  auto Coordinates3 = Coordinates.slice( indices[index_range(2,Nx)][1][index_range(1,10,2)] );
 
   auto ind3 = Coordinates3.lower_bound( 2, 4 );
   CHECK( ind3[0] == 0 );

@@ -12,9 +12,6 @@
 #include "RangeDiscretizers.hpp"
 #include "Utils.hpp"
 
-using namespace boost;
-using namespace RangeDiscretizers;
-
 /** @file CoordinateSystem.hpp
   * @brief
   * @author C.D. Clark III
@@ -25,9 +22,9 @@ using namespace RangeDiscretizers;
 * @brief
   * @author C.D. Clark III */
 template <typename T>
-using array1D = multi_array<T, 1>;
+using array1D = boost::multi_array<T, 1>;
 template <typename T>
-using view1D = detail::multi_array::multi_array_view<T, 1>;
+using view1D = boost::detail::multi_array::multi_array_view<T, 1>;
 
 template <typename COORD, size_t NUMDIMS, template <typename> class ARRAY = array1D>
 class CoordinateSystem {
@@ -38,7 +35,7 @@ class CoordinateSystem {
   typedef CoordinateSystem<COORD, NUMDIMS, ARRAY> this_type;
 
   protected:
-  array<std::shared_ptr<axis_type>, NUMDIMS> axes;
+  boost::array<std::shared_ptr<axis_type>, NUMDIMS> axes;
 
   public:
   template <typename... Args>
@@ -48,13 +45,13 @@ class CoordinateSystem {
   }
 
   template <typename I>
-  CoordinateSystem(array<I, NUMDIMS> sizes)
+  CoordinateSystem(boost::array<I, NUMDIMS> sizes)
   {
     for (int i = 0; i < NUMDIMS; i++)
       axes[i].reset(new axis_type(boost::extents[sizes[i]]));
   }
 
-  CoordinateSystem(array<std::shared_ptr<axis_type>, NUMDIMS> axes_)
+  CoordinateSystem(boost::array<std::shared_ptr<axis_type>, NUMDIMS> axes_)
   {
     for (int i = 0; i < NUMDIMS; i++)
       axes[i] = axes_[i];
@@ -111,7 +108,7 @@ class CoordinateSystem {
   template <typename... Args>
   auto operator()(Args... args) const
   {
-    array<COORD, NUMDIMS> c;
+    boost::array<COORD, NUMDIMS> c;
     getCoord_imp<0>(c, args...);
     return c;
   }
@@ -120,7 +117,7 @@ class CoordinateSystem {
   template <typename... Args>
   auto getCoord(Args... args) const
   {
-    array<COORD, NUMDIMS> c;
+    boost::array<COORD, NUMDIMS> c;
     getCoord_imp<0>(c, args...);
     return c;
   }
@@ -128,14 +125,14 @@ class CoordinateSystem {
   /** Return a sliced coordinate system view based on an index generator. */
   template <int NDims>
   const auto
-  slice(const detail::multi_array::index_gen<NUMDIMS, NDims>& ind) const
+  slice(const boost::detail::multi_array::index_gen<NUMDIMS, NDims>& ind) const
   {
     // Notes:
     // NUMDIMS is the number of dimensions of this coordinate system
     // NDims is the number of dimensions of the coordinate system we need to create.
-    multi_array_types::index_gen indices;
+    boost::multi_array_types::index_gen indices;
     // create an array of axis views that will be used to construct the new coordinate system.
-    array<std::shared_ptr<view1D<COORD> >, NDims> new_axes;
+    boost::array<std::shared_ptr<view1D<COORD> >, NDims> new_axes;
     int ii = 0;
     // loop through each axis
     for (int i = 0; i < NUMDIMS; i++) {
@@ -152,14 +149,14 @@ class CoordinateSystem {
   /** Return a sliced coordinate system view based on an index generator. */
   template <int NDims>
   auto
-  slice(const detail::multi_array::index_gen<NUMDIMS, NDims>& ind)
+  slice(const boost::detail::multi_array::index_gen<NUMDIMS, NDims>& ind)
   {
     // Notes:
     // NUMDIMS is the number of dimensions of this coordinate system
     // NDims is the number of dimensions of the coordinate system we need to create.
-    multi_array_types::index_gen indices;
+    boost::multi_array_types::index_gen indices;
     // create an array of axis views that will be used to construct the new coordinate system.
-    array<std::shared_ptr<view1D<COORD> >, NDims> new_axes;
+    boost::array<std::shared_ptr<view1D<COORD> >, NDims> new_axes;
     int ii = 0;
     // loop through each axis
     for (int i = 0; i < NUMDIMS; i++) {
@@ -178,7 +175,7 @@ class CoordinateSystem {
   auto
   lower_bound(Args... args) const
   {
-    array<int, NUMDIMS> ind;
+    boost::array<int, NUMDIMS> ind;
     lower_bound_imp<0>(ind, args...);
     return ind;
   }
@@ -187,7 +184,7 @@ class CoordinateSystem {
   auto
   upper_bound(Args... args) const
   {
-    array<int, NUMDIMS> ind;
+    boost::array<int, NUMDIMS> ind;
     upper_bound_imp<0>(ind, args...);
     return ind;
   }
@@ -196,7 +193,7 @@ class CoordinateSystem {
   auto
   nearest(Args... args) const
   {
-    array<int, NUMDIMS> ind;
+    boost::array<int, NUMDIMS> ind;
     nearest_imp<0>(ind, args...);
     return ind;
   }
@@ -204,7 +201,7 @@ class CoordinateSystem {
   // helper functions/implementations
   protected:
   template <int II, typename N, typename... Args>
-  typename std::enable_if<is_integral<N>::value, void>::type
+  typename std::enable_if<std::is_integral<N>::value, void>::type
   init_imp(N n, Args... args)
   {
     axes[II].reset(new axis_type(boost::extents[n]));
@@ -228,7 +225,7 @@ class CoordinateSystem {
   }
 
   template <int II, typename R, typename... Args>
-  typename std::enable_if<!is_same<R, none_t>::value, void>::type
+  typename std::enable_if<!std::is_same<R, boost::none_t>::value, void>::type
   set_imp(R range, Args... args)
   {
     size_t N = axes[II]->size();
@@ -239,7 +236,7 @@ class CoordinateSystem {
   }
 
   template <int II, typename R, typename... Args>
-  typename std::enable_if<is_same<R, none_t>::value, void>::type
+  typename std::enable_if<std::is_same<R, boost::none_t>::value, void>::type
       set_imp(R, Args... args)
   {
     set_imp<II + 1>(args...);

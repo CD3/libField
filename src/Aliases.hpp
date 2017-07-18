@@ -12,5 +12,10 @@
 // alias for the index_range type
 using IRange = boost::multi_array_types::index_range;
 
+// pull some commonly used boost types into global namespace
+using boost::multi_array_types::index_range;
+using boost::extent;
+using boost::indices;
+
 
 #endif // include protector

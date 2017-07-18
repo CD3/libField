@@ -193,11 +193,13 @@ set( ${PROJECT_NAME}_SOURCES ${${PROJECT_NAME}_DETECTED_SOURCES}
 # If your project is a library, use add_library. The file that is created will be named lib<TARGET>, so
 # if your project name is libMPE for example, you would want to use MPE for <TARGET>.
 string( REGEX REPLACE "^lib" "" LIB_NAME ${PROJECT_NAME} )
+if( ${PROJECT_NAME}_SOURCES )
 message( STATUS "library target name: ${LIB_NAME}" )
 add_library( ${LIB_NAME} STATIC ${${PROJECT_NAME}_SOURCES} ${${PROJECT_NAME}_EXTERNAL_SOURCES})
 
 set_target_properties( ${LIB_NAME} PROPERTIES VERSION ${${PROJECT_NAME}_VERSION} CXX_STANDARD 11)
 target_link_libraries( ${LIB_NAME} ${Boost_LIBS} ) # add any link dependencies
+endif()
 
 
 

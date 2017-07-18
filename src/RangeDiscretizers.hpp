@@ -79,5 +79,9 @@ namespace RangeDiscretizers
 
 }
 
+// pull functions into global namespace
+using RangeDiscretizers::Uniform;
+using RangeDiscretizers::Geometric;
+
 
 #endif // include protector

@@ -7,7 +7,6 @@
 #include <ostream>
 
 #include <boost/multi_array.hpp>
-using namespace boost;
 
 #include "CoordinateSystem.hpp"
 #include "Utils.hpp"
@@ -23,9 +22,9 @@ using namespace boost;
   * @author C.D. Clark III
   */
 template <typename T, std::size_t N>
-using arrayND = multi_array<T, N, std::allocator<T>>;
+using arrayND = boost::multi_array<T, N, std::allocator<T>>;
 template <typename T, std::size_t N>
-using viewND = detail::multi_array::multi_array_view<T, N>;
+using viewND = boost::detail::multi_array::multi_array_view<T, N>;
 
 template <typename QUANT, size_t NUMDIMS, typename COORD = QUANT,
           template <typename, size_t> class ARRAYND = arrayND,
@@ -46,11 +45,11 @@ class Field
     Field(Args... args)
     {
         cs.reset(new cs_type(args...));
-        array<int, NUMDIMS> sizes({args...});
+        boost::array<int, NUMDIMS> sizes({args...});
         d.reset(new array_type(sizes));
     }
     template <typename I>
-    Field(array<I, NUMDIMS> sizes)
+    Field(boost::array<I, NUMDIMS> sizes)
     {
         cs.reset(new cs_type(sizes));
         d.reset(new array_type(sizes));
@@ -117,18 +116,18 @@ class Field
     // indices given as separate arguments
     template <typename I,
               typename... Args,
-              typename std::enable_if<is_integral<I>::value,int>::type = 0>
+              typename std::enable_if<std::is_integral<I>::value,int>::type = 0>
     const auto &operator()(I i, Args... args) const
     {
-        return (*d)(array<I, NUMDIMS>({i,args...}));
+        return (*d)(boost::array<I, NUMDIMS>({i,args...}));
     }
 
     template <typename I,
               typename... Args,
-              typename std::enable_if<is_integral<I>::value,int>::type = 0>
+              typename std::enable_if<std::is_integral<I>::value,int>::type = 0>
     auto &operator()(I i, Args... args)
     {
-        return (*d)(array<I, NUMDIMS>({i,args...}));
+        return (*d)(boost::array<I, NUMDIMS>({i,args...}));
     }
 
     template <typename I>
@@ -183,7 +182,7 @@ class Field
 
     template <int NDims>
     const auto
-    slice(const detail::multi_array::index_gen<NUMDIMS, NDims> &ind) const
+    slice(const boost::detail::multi_array::index_gen<NUMDIMS, NDims> &ind) const
     {
         // get sliced data
         auto d_ = d->operator[](ind);
@@ -194,7 +193,7 @@ class Field
     }
 
     template <int NDims>
-    auto slice(const detail::multi_array::index_gen<NUMDIMS, NDims> &ind)
+    auto slice(const boost::detail::multi_array::index_gen<NUMDIMS, NDims> &ind)
     {
         // get sliced data
         auto d_ = d->operator[](ind);
@@ -232,7 +231,7 @@ class Field
     {
         auto shape = d->shape();
 
-        array<size_t, NUMDIMS> ind;
+        boost::array<size_t, NUMDIMS> ind;
         int NN = shape[0];
         for (int j = 1; j < NUMDIMS; ++j)
             NN *= shape[j];
