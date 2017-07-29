@@ -56,6 +56,7 @@ if (STANDALONE_CONFIG)
                                   existing SWIG generated files. If you want
                                   to generate new files to build with,
                                   you should turn both of these options on" OFF )
+  option( SERIALIZATION          "Enalbe Boost serialization. This requires the Boost.Serialization library, and defining BOOST_NO_MEMBER_TEMPLATE_FREINDS." OFF )
 endif()
 
 # only include CPack if we are being configured as a standalone package
@@ -96,6 +97,7 @@ set( CPACK_PACKAGE_VERSION_PATCH ${${PROJECT_NAME}_VERSION_PATCH} )
 # we'll do the same for definitions and anything else that might be useful for external projects
 # to have access to.
 set( _${PROJECT_NAME}_INCLUDE_DIRS "" )
+set( _${PROJECT_NAME}_LIBRARIES "" )
 set( _${PROJECT_NAME}_DEFINITIONS "" )
 
 
@@ -126,7 +128,18 @@ installation was found." )
 # The boost command line argument parser.
 find_package( Boost COMPONENTS program_options)
 list( APPEND _${PROJECT_NAME}_INCLUDE_DIRS ${Boost_INCLUDE_DIRS} )
-set( Boost_LIBS ${Boost_LIBS} ${Boost_LIBRARIES} )
+list( APPEND _${PROJECT_NAME}_LIBRARIES    ${Boost_LIBRARIES} )
+
+# The boost command serialization library.
+if( SERIALIZATION )
+find_package( Boost COMPONENTS serialization)
+if( Boost_SERIALIZATION_FOUND )
+list( APPEND _${PROJECT_NAME}_INCLUDE_DIRS ${Boost_INCLUDE_DIRS} )
+list( APPEND _${PROJECT_NAME}_LIBRARIES    ${Boost_LIBRARIES} )
+list( APPEND _${PROJECT_NAME}_DEFINITIONS  "-DSERIALIZATION_ENABLED" )
+list( APPEND _${PROJECT_NAME}_DEFINITIONS  "-DBOOST_NO_MEMBER_TEMPLATE_FRIENDS" )
+endif()
+endif()
 
 # The boost header libraries
 #find_package( Boost REQUIRED ) # if boost is a required dependency, use this
@@ -147,7 +160,7 @@ list( APPEND _${PROJECT_NAME}_INCLUDE_DIRS ${EIGEN3_INCLUDE_DIR} )
 # Add any specific comiler defines that you need. These should be
 # defines that your source code uses. Don't add things like --std=g++11 for example,
 # this will be taken care of by target_compile_features command.
-list( APPEND _${PROJECT_NAME}_DEFINITIONS "" )
+#list( APPEND _${PROJECT_NAME}_DEFINITIONS "" )
 
 # The configure_file command is used to create a source file from a template.
 # For example, we can insert version information into our source code by creating
@@ -198,7 +211,7 @@ message( STATUS "library target name: ${LIB_NAME}" )
 add_library( ${LIB_NAME} STATIC ${${PROJECT_NAME}_SOURCES} ${${PROJECT_NAME}_EXTERNAL_SOURCES})
 
 set_target_properties( ${LIB_NAME} PROPERTIES VERSION ${${PROJECT_NAME}_VERSION} CXX_STANDARD 11)
-target_link_libraries( ${LIB_NAME} ${Boost_LIBS} ) # add any link dependencies
+target_link_libraries( ${LIB_NAME} ${_${PROJECT_NAME}_LIBRARIES} ) # add any link dependencies
 endif()
 
 

@@ -41,6 +41,17 @@ class Field
     std::shared_ptr<cs_type> cs;
 
   public:
+#if SERIALIZATION_ENABLED
+template<class Archive>
+void serialize( Archive &ar, const unsigned int version)
+{
+  ar & d;
+  ar & cs;
+}
+// default constructor is only defined if serialization is enabled
+Field() {}
+
+#endif
     template <typename... Args>
     Field(Args... args)
     {

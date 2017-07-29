@@ -37,7 +37,19 @@ class CoordinateSystem {
   protected:
   std::array<std::shared_ptr<axis_type>, NUMDIMS> axes;
 
+
   public:
+#if SERIALIZATION_ENABLED
+
+template<class Archive>
+void serialize( Archive &ar, const unsigned int version)
+{
+  ar & axes;
+}
+// default constructor is only defined if serialization is enabled
+CoordinateSystem() {}
+
+#endif
   template <typename... Args>
   CoordinateSystem(Args... args)
   {

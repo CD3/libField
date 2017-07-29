@@ -29,7 +29,7 @@ add_executable(${testName} ${unitTest_SOURCES})
 set_target_properties( ${testName} PROPERTIES CXX_STANDARD 14)
 
 #Link dependencies
-#target_link_libraries(${testName} <TARGET> ) # If your project builds a library, link to it here
+target_link_libraries(${testName} ${_${PROJECT_NAME}_LIBRARIES}) # If your project builds a library, link to it here
 
 # Make sure that testing binaries are created in the binDir directory
 set_target_properties(${testName} PROPERTIES RUNTIME_OUTPUT_DIRECTORY  ${binDir} )
