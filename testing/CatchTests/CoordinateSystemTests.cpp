@@ -133,6 +133,27 @@ TEST_CASE( "CoordinateSystem Usage" ) {
   
 }
 
+TEST_CASE( "CoordinateSystem Range Setting" ) {
+
+  CoordinateSystem<double,3> Coordinates(10,10,10);
+
+  Coordinates.set( Uniform(1,10), Geometric(0.,1,2), Geometric(1,0.1,1.1) );
+
+  for(int i = 0; i < 10; i++)
+    CHECK( Coordinates.getAxis(0)[i] == Approx( 1 + i ) );
+
+  double x = 0;
+  double dx = 1;
+  double s = 2;
+  for(int i = 0; i < 10; i++)
+  {
+    CHECK( Coordinates.getAxis(1)[i] == Approx( x ) );
+    x += dx;
+    dx *= s;
+  }
+
+}
+
 
 
 TEST_CASE( "CoordinateSystem Slicing" ) {

@@ -62,7 +62,9 @@ namespace RangeDiscretizers
         // x[2] = xmin + dx + s*dx
         // x[3] = xmin + dx + s*dx + s*s*dx
         // x[i] = xmin + dx*\sigma s^(i-1)
-        return min + pow( 1.*dx, i-1 );
+        // which is the geometric series.
+        
+        return min + 1.*dx*( 1 - pow( 1.*stretch, i ) )/( 1 - stretch );
       }
 
       
