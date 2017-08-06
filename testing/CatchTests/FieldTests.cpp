@@ -122,7 +122,7 @@ TEST_CASE( "Field Usage" ) {
 }
 
 TEST_CASE( "Field Operators" ) {
-  Field<double,2> T( 2,3 );
+  Field<double,2> T( 2,3 ), U( 2,3 );
 
   T = 1.0;
   for(int i = 0; i < 2; i++)
@@ -149,6 +149,30 @@ TEST_CASE( "Field Operators" ) {
     for(int j = 0; j < 3; j++)
       CHECK(T[i][j] == Approx(3.0));
 
+  U = T;
+  for(int i = 0; i < 2; i++)
+    for(int j = 0; j < 3; j++)
+      CHECK(U[i][j] == Approx(3.0));
+
+  U += T;
+  for(int i = 0; i < 2; i++)
+    for(int j = 0; j < 3; j++)
+      CHECK(U[i][j] == Approx(6.0));
+
+  U *= T;
+  for(int i = 0; i < 2; i++)
+    for(int j = 0; j < 3; j++)
+      CHECK(U[i][j] == Approx(18.0));
+
+  U -= T;
+  for(int i = 0; i < 2; i++)
+    for(int j = 0; j < 3; j++)
+      CHECK(U[i][j] == Approx(15.0));
+
+  U /= T;
+  for(int i = 0; i < 2; i++)
+    for(int j = 0; j < 3; j++)
+      CHECK(U[i][j] == Approx(5.0));
 }
 
 TEST_CASE("Field Slicing")

@@ -263,6 +263,7 @@ Field() {}
         return output;
     }
 
+
     template <typename Q>
     Field& operator=(const Q& q)
     {
@@ -319,6 +320,60 @@ Field() {}
     }
 
     
+    Field& operator=(const Field& f)
+    {
+        BOOST_ASSERT( f.size() == this->size() );
+        auto N = d->num_elements();
+        #pragma omp parallel for
+        for (int i = 0; i < N; ++i) {
+          auto ind = this->_1d2nd(i);
+          d->operator()(ind) = f(ind);
+        }
+    }
+
+    Field& operator+=(const Field& f)
+    {
+        BOOST_ASSERT( f.size() == this->size() );
+        auto N = d->num_elements();
+        #pragma omp parallel for
+        for (int i = 0; i < N; ++i) {
+          auto ind = this->_1d2nd(i);
+          d->operator()(ind) += f(ind);
+        }
+    }
+
+    Field& operator-=(const Field& f)
+    {
+        BOOST_ASSERT( f.size() == this->size() );
+        auto N = d->num_elements();
+        #pragma omp parallel for
+        for (int i = 0; i < N; ++i) {
+          auto ind = this->_1d2nd(i);
+          d->operator()(ind) -= f(ind);
+        }
+    }
+
+    Field& operator*=(const Field& f)
+    {
+        BOOST_ASSERT( f.size() == this->size() );
+        auto N = d->num_elements();
+        #pragma omp parallel for
+        for (int i = 0; i < N; ++i) {
+          auto ind = this->_1d2nd(i);
+          d->operator()(ind) *= f(ind);
+        }
+    }
+
+    Field& operator/=(const Field& f)
+    {
+        BOOST_ASSERT( f.size() == this->size() );
+        auto N = d->num_elements();
+        #pragma omp parallel for
+        for (int i = 0; i < N; ++i) {
+          auto ind = this->_1d2nd(i);
+          d->operator()(ind) /= f(ind);
+        }
+    }
 
 
 
