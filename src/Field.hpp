@@ -48,10 +48,10 @@ void serialize( Archive &ar, const unsigned int version)
   ar & d;
   ar & cs;
 }
-// default constructor is only defined if serialization is enabled
-Field() {}
-
 #endif
+
+    Field() {}
+
     template <typename... Args>
     Field(Args... args)
     {

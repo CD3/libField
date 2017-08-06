@@ -46,10 +46,11 @@ void serialize( Archive &ar, const unsigned int version)
 {
   ar & axes;
 }
-// default constructor is only defined if serialization is enabled
-CoordinateSystem() {}
 
 #endif
+
+  CoordinateSystem() {}
+
   template <typename... Args>
   CoordinateSystem(Args... args)
   {
