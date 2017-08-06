@@ -55,17 +55,37 @@ Field() {}
     template <typename... Args>
     Field(Args... args)
     {
+      reset(args...);
+    }
+    template <typename I>
+    Field(std::array<I, NUMDIMS> sizes)
+    {
+      reset(sizes);
+    }
+    Field(std::shared_ptr<cs_type> cs_)
+    {
+      reset(cs_);
+    }
+
+    Field(cs_type &cs_, array_type &d_)
+    {
+      reset(cs_, d_);
+    };
+
+    template <typename... Args>
+    void reset(Args... args)
+    {
         cs.reset(new cs_type(args...));
         std::array<int, NUMDIMS> sizes({args...});
         d.reset(new array_type(sizes));
     }
     template <typename I>
-    Field(std::array<I, NUMDIMS> sizes)
+    void reset(std::array<I, NUMDIMS> sizes)
     {
         cs.reset(new cs_type(sizes));
         d.reset(new array_type(sizes));
     }
-    Field(std::shared_ptr<cs_type> cs_)
+    void reset(std::shared_ptr<cs_type> cs_)
     {
         cs = cs_;
 
@@ -76,35 +96,15 @@ Field() {}
         d.reset(new array_type(sizes));
     }
 
-    Field(cs_type &cs_, array_type &d_)
+    void reset(cs_type &cs_, array_type &d_)
     {
         d.reset(new array_type(d_));
         cs.reset(new cs_type(cs_.getAxes()));
     };
+
+
     virtual ~Field(){};
 
-
-    // TODO: allow both of these function to be called set.
-    template<typename F>
-    auto set_f( F f )
-    {
-        auto N = d->num_elements();
-        for (int i = 0; i < N; ++i) {
-          auto ind = this->_1d2nd(i);
-          d->operator()(ind) = f(ind, cs);
-        }
-    }
-
-    template <typename Q>
-    auto set(Q q)
-    {
-        auto N = d->num_elements();
-        #pragma omp parallel for
-        for (int i = 0; i < N; ++i) {
-          auto ind = this->_1d2nd(i);
-          d->operator()(ind) = q;
-        }
-    }
 
     // ELEMENT ACCESS
 
@@ -217,6 +217,32 @@ Field() {}
     auto size() const { return d->num_elements(); }
     auto size(int i) const { return d->shape()[i]; }
 
+
+    // TODO: allow both of these function to be called set.
+    template<typename F>
+    auto set_f( F f )
+    {
+        auto N = d->num_elements();
+        for (int i = 0; i < N; ++i) {
+          auto ind = this->_1d2nd(i);
+          d->operator()(ind) = f(ind, cs);
+        }
+    }
+
+    template <typename Q>
+    auto set(Q q)
+    {
+        auto N = d->num_elements();
+        #pragma omp parallel for
+        for (int i = 0; i < N; ++i) {
+          auto ind = this->_1d2nd(i);
+          d->operator()(ind) = q;
+        }
+    }
+
+
+    // operator overloads
+
     friend std::ostream &operator<<(std::ostream &output, const Field &F)
     {
         auto N = F.d->num_elements();
@@ -236,6 +262,65 @@ Field() {}
         }
         return output;
     }
+
+    template <typename Q>
+    Field& operator=(const Q& q)
+    {
+        auto N = d->num_elements();
+        #pragma omp parallel for
+        for (int i = 0; i < N; ++i) {
+          auto ind = this->_1d2nd(i);
+          d->operator()(ind) = q;
+        }
+    }
+
+    template <typename Q>
+    Field& operator+=(const Q& q)
+    {
+        auto N = d->num_elements();
+        #pragma omp parallel for
+        for (int i = 0; i < N; ++i) {
+          auto ind = this->_1d2nd(i);
+          d->operator()(ind) += q;
+        }
+    }
+
+    template <typename Q>
+    Field& operator-=(const Q& q)
+    {
+        auto N = d->num_elements();
+        #pragma omp parallel for
+        for (int i = 0; i < N; ++i) {
+          auto ind = this->_1d2nd(i);
+          d->operator()(ind) -= q;
+        }
+    }
+
+    template <typename Q>
+    Field& operator*=(const Q& q)
+    {
+        auto N = d->num_elements();
+        #pragma omp parallel for
+        for (int i = 0; i < N; ++i) {
+          auto ind = this->_1d2nd(i);
+          d->operator()(ind) *= q;
+        }
+    }
+
+    template <typename Q>
+    Field& operator/=(const Q& q)
+    {
+        auto N = d->num_elements();
+        #pragma omp parallel for
+        for (int i = 0; i < N; ++i) {
+          auto ind = this->_1d2nd(i);
+          d->operator()(ind) /= q;
+        }
+    }
+
+    
+
+
 
   protected:
     auto _1d2nd(size_t i) const
