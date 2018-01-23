@@ -50,7 +50,9 @@ void serialize( Archive &ar, const unsigned int version)
 }
 #endif
 
-    Field() {}
+    Field() = default;
+    Field(const Field&) = default;
+    Field(Field&&) = default;
 
     template <typename... Args>
     Field(Args... args)

@@ -49,7 +49,9 @@ void serialize( Archive &ar, const unsigned int version)
 
 #endif
 
-  CoordinateSystem() {}
+  CoordinateSystem() = default;
+  CoordinateSystem(const CoordinateSystem&) = default;
+  CoordinateSystem(CoordinateSystem&&) = default;
 
   template <typename... Args>
   CoordinateSystem(Args... args)
