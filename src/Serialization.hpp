@@ -15,6 +15,7 @@
 
 #include "Field.hpp"
 
+#include<boost/array.hpp>
 #include<boost/serialization/array.hpp>
 #include<boost/serialization/shared_ptr.hpp>
 
@@ -26,8 +27,8 @@ inline void save( Archive &ar, const boost::multi_array<T,N>& a, const unsigned 
 {
 
   // write storage order info first
-  array<multi_array_types::size_type,N> storage_order_ordering;
-  array<bool                        ,N> storage_order_ascending;
+  boost::array<multi_array_types::size_type,N> storage_order_ordering;
+  boost::array<bool                        ,N> storage_order_ascending;
   for(int i = 0; i < N; i++)
   {
     storage_order_ordering[i] = a.storage_order().ordering(i);
@@ -54,8 +55,8 @@ inline void load( Archive &ar, boost::multi_array<T,N>& a, const unsigned int ve
 {
 
   // read storage order
-  array<multi_array_types::size_type,N> storage_order_ordering;
-  array<bool                        ,N> storage_order_ascending;
+  boost::array<multi_array_types::size_type,N> storage_order_ordering;
+  boost::array<bool                        ,N> storage_order_ascending;
   ar >> make_array(storage_order_ordering.data(), N);
   ar >> make_array(storage_order_ascending.data(), N);
   a.storage_ = general_storage_order<N>( storage_order_ordering.data(), storage_order_ascending.data() );

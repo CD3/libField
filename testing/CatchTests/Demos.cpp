@@ -16,7 +16,7 @@ TEST_CASE( "Tutorial : 2D Temperature", "[tutorial]" ) {
   CHECK( T.getCoord(1,1)[0] == Approx(-3   + 6./9) );
   CHECK( T.getCoord(1,1)[1] == Approx(10./14) );
 
-  std::cout << T << std::endl;
+  //std::cout << T << std::endl;
 
 
   for(int i = 0; i < T.size(0); ++i)

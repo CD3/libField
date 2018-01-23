@@ -235,12 +235,12 @@ TEST_CASE( "CoordinateSystem Slicing" ) {
 }
 
 
-TEST_CASE( "CoordinateSystem Index Searcing" ) {
+TEST_CASE( "CoordinateSystem Index Searching" ) {
 
   CoordinateSystem<double,3> Coordinates(11,6,21);
   Coordinates.set( Uniform(0.,10.), Uniform(0.,10.), Uniform(0.,10.) );
 
-  std::cout << "===================================" << std::endl;
+  //std::cout << "===================================" << std::endl;
 
   typedef std::array<int,3> A;
   A ind;
