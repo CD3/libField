@@ -37,6 +37,9 @@ find_package( Boost REQUIRED )
 find_package( Eigen3 REQUIRED )
 add_library( Eigen3::eigen3 INTERFACE IMPORTED )
 set_property( TARGET Eigen3::eigen3 PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${EIGEN3_INCLUDE_DIR})
+if( SERIALIZATION )
+  find_package( Boost REQUIRED COMPONENTS serialization)
+endif()
 
 string( REGEX REPLACE "^lib" "" LIB_NAME ${PROJECT_NAME} )
 add_library( ${LIB_NAME} INTERFACE )
@@ -49,13 +52,16 @@ target_sources(
   ${LIB_NAME}
   INTERFACE
 )
-target_link_libraries(${LIB_NAME} INTERFACE Boost::boost)
-target_link_libraries(${LIB_NAME} INTERFACE Eigen3::eigen3)
-if( SERIALIZATION )
-  find_package( Boost REQUIRED COMPONENTS serialization)
-  target_link_libraries(${LIB_NAME} INTERFACE Boost::serialization)
-  target_compile_definitions(${LIB_NAME} INTERFACE SERIALIZATION_ENABLED BOOST_NO_MEMBER_TEMPLATE_FRIENDS)
-endif()
+
+target_link_libraries(${LIB_NAME}
+  INTERFACE
+    Boost::boost
+    Eigen3::eigen3
+    $<$<BOOL:${SERIALIZATION}>:Boost::serialization>)
+
+target_compile_definitions(${LIB_NAME}
+  INTERFACE
+    $<$<BOOL:${SERIALIZATION}>:SERIALIZATION_ENABLED BOOST_NO_MEMBER_TEMPLATE_FRIENDS>)
 
 
 
