@@ -24,9 +24,9 @@ endif()
 
 # need to run configure_file twice
 configure_file( "${CMAKE_CURRENT_SOURCE_DIR}/src/version.h.in"
-                "${CMAKE_CURRENT_SOURCE_DIR}/src/version.h")
-configure_file( "${CMAKE_CURRENT_SOURCE_DIR}/src/version.h"
-                "${CMAKE_CURRENT_SOURCE_DIR}/src/version.h")
+                "${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}_version.h")
+configure_file( "${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}_version.h"
+                "${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}_version.h")
 
 
 set( cxx_needed_features
@@ -73,12 +73,16 @@ install( TARGETS ${LIB_NAME} EXPORT ${PROJECT_NAME}Targets
 )
 install(DIRECTORY src/
   DESTINATION include/${PROJECT_NAME}
-  FILES_MATCHING PATTERN "*.hpp"
+  FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h"
+)
+install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include/
+  DESTINATION include/${PROJECT_NAME}
+  FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h"
 )
 install(EXPORT ${PROJECT_NAME}Targets
   FILE ${PROJECT_NAME}Targets.cmake
   NAMESPACE ${PROJECT_NAME}::
-  DESTINATION lib/cmake/${PROJECT_NAME}
+  DESTINATION cmake/${PROJECT_NAME}
 )
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
 "include(CMakeFindDependencyMacro)
@@ -97,7 +101,7 @@ write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Conf
 install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
-  DESTINATION lib/cmake/${PROJECT_NAME}
+  DESTINATION cmake/${PROJECT_NAME}
   )
 
 if( STANDALONE )
