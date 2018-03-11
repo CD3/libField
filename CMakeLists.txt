@@ -16,11 +16,12 @@ option( SERIALIZATION          "Enalbe Boost serialization. This requires the Bo
 
 project(libField)
 if( STANDALONE )
-  include(GitVersion)
+  include(macro-git_version)
   GIT_VERSION(${PROJECT_NAME})
 else()
   set(${PROJECT_NAME}_VERSION "X.X-subproject")
 endif()
+message(STATUS "${PROJECT_NAME} version: ${${PROJECT_NAME}_VERSION_FULL}")
 
 # need to run configure_file twice
 configure_file( "${CMAKE_CURRENT_SOURCE_DIR}/src/version.h.in"
@@ -63,6 +64,11 @@ target_compile_definitions(${LIB_NAME}
   INTERFACE
     $<$<BOOL:${SERIALIZATION}>:SERIALIZATION_ENABLED BOOST_NO_MEMBER_TEMPLATE_FRIENDS>)
 
+if( STANDALONE )
+add_subdirectory( testing )
+endif()
+
+
 
 
 install( TARGETS ${LIB_NAME} EXPORT ${PROJECT_NAME}Targets
@@ -104,6 +110,22 @@ install(FILES
   DESTINATION cmake/${PROJECT_NAME}
   )
 
-if( STANDALONE )
-add_subdirectory( testing )
+
+
+
+INCLUDE(InstallRequiredSystemLibraries)
+
+SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "A library for doing computations on a discretized field.")
+SET(CPACK_PACKAGE_VENDOR "C.D. Clark III")
+SET(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
+SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.md")
+if( ${PROJECT_NAME}_VERSION_MAJOR)
+  SET(CPACK_PACKAGE_VERSION_MAJOR ${${PROJECT_NAME}_VERSION_MAJOR})
 endif()
+if( ${PROJECT_NAME}_VERSION_MINOR)
+  SET(CPACK_PACKAGE_VERSION_MINOR ${${PROJECT_NAME}_VERSION_MINOR})
+endif()
+if( ${PROJECT_NAME}_VERSION_PATCH)
+  SET(CPACK_PACKAGE_VERSION_PATCH ${${PROJECT_NAME}_VERSION_PATCH})
+endif()
+INCLUDE(CPack)
