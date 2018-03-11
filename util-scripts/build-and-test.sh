@@ -50,12 +50,22 @@ EOF
 cat << EOF > CMakeLists.txt
 cmake_minimum_required(VERSION 3.1)
 add_executable( main main.cpp )
-find_package( libField REQUIRED )
+find_package( libField REQUIRED PATHS ${bindir}/install )
 target_link_libraries(main libField::Field )
 set_target_properties(main PROPERTIES CXX_STANDARD 14)
 EOF
 
-cmake . -DlibField_DIR=${bindir}/install/cmake/libField
+mkdir build1
+cd build1
+cmake .. -DlibField_DIR=${bindir}/install/cmake/libField
+cmake --build .
+./main
+
+cd ..
+
+mkdir build2
+cd build2
+cmake ..
 cmake --build .
 ./main
 
