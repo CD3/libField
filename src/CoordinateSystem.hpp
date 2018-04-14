@@ -72,7 +72,7 @@ void serialize( Archive &ar, const unsigned int version)
       axes[i] = axes_[i];
   }
 
-  virtual ~CoordinateSystem(){};
+  ~CoordinateSystem() = default;
 
   /** Returns size of the i'th axis. */
   auto size(int i) const

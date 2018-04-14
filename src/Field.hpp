@@ -105,7 +105,7 @@ void serialize( Archive &ar, const unsigned int version)
     };
 
 
-    virtual ~Field(){};
+    ~Field() = default;
 
 
     // ELEMENT ACCESS
