@@ -112,14 +112,14 @@ void serialize( Archive &ar, const unsigned int version)
 
     // using an index container ( C array, std::vector, std::array, etc )
     template <typename I,
-              typename std::enable_if<is_index_cont<I>::value,int>::type = 0>
+              typename std::enable_if<IsIndexCont<I>::value,int>::type = 0>
     const auto &operator()(I i) const
     {
         return (*d)(i);
     }
 
     template <typename I,
-              typename std::enable_if<is_index_cont<I>::value,int>::type = 0>
+              typename std::enable_if<IsIndexCont<I>::value,int>::type = 0>
     auto &operator()(I i)
     {
         return (*d)(i);

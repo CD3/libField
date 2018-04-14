@@ -10,14 +10,14 @@
 
 // a collection of range discretized.
 // these calculate values in a discrete set over some range.
-namespace RangeDiscretizers
+namespace range_discretizers
 {
 
   template<typename T>
-  class Uniform_imp
+  class UniformImp
   {
     public:
-      Uniform_imp( T min, T max )
+      UniformImp( T min, T max )
       {
         this->min = min;
         this->max = max;
@@ -35,9 +35,9 @@ namespace RangeDiscretizers
 
   // using a factory function here so that argument types can be deduced.
   template<typename T,typename V>
-  Uniform_imp<T> Uniform( T min, V max )
+  UniformImp<T> Uniform( T min, V max )
   {
-    return Uniform_imp<T>(min,max);
+    return UniformImp<T>(min,max);
   }
 
 
@@ -45,10 +45,10 @@ namespace RangeDiscretizers
 
 
   template<typename T>
-  class Geometric_imp
+  class GeometricImp
   {
     public:
-      Geometric_imp( T min, T dx, T stretch )
+      GeometricImp( T min, T dx, T stretch )
       {
         this->min = min;
         this->dx = dx;
@@ -74,16 +74,16 @@ namespace RangeDiscretizers
 
   // using a factory function here so that argument types can be deduced.
   template<typename T,typename V,typename U>
-  Geometric_imp<T> Geometric( T min, V dx, U stretch)
+  GeometricImp<T> Geometric( T min, V dx, U stretch)
   {
-    return Geometric_imp<T>(min,dx,stretch);
+    return GeometricImp<T>(min,dx,stretch);
   }
 
 }
 
 // pull functions into global namespace
-using RangeDiscretizers::Uniform;
-using RangeDiscretizers::Geometric;
+using range_discretizers::Uniform;
+using range_discretizers::Geometric;
 
 
 #endif // include protector

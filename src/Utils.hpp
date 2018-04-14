@@ -15,28 +15,28 @@
 
 // type traits
 template< typename T >
-struct is_index_cont : std::false_type {};
+struct IsIndexCont : std::false_type {};
 
 template< typename T, size_t N >
-struct is_index_cont<T[N]> : std::true_type {};
+struct IsIndexCont<T[N]> : std::true_type {};
 
 template< >
-struct is_index_cont<std::vector<int>> : std::true_type {};
+struct IsIndexCont<std::vector<int>> : std::true_type {};
 
 template< >
-struct is_index_cont<std::vector<size_t>> : std::true_type {};
+struct IsIndexCont<std::vector<size_t>> : std::true_type {};
 
 template< size_t N >
-struct is_index_cont<boost::array<int,N>> : std::true_type {};
+struct IsIndexCont<boost::array<int,N>> : std::true_type {};
 
 template< size_t N >
-struct is_index_cont<boost::array<size_t,N>> : std::true_type {};
+struct IsIndexCont<boost::array<size_t,N>> : std::true_type {};
 
 template< size_t N >
-struct is_index_cont<std::array<int,N>> : std::true_type {};
+struct IsIndexCont<std::array<int,N>> : std::true_type {};
 
 template< size_t N >
-struct is_index_cont<std::array<size_t,N>> : std::true_type {};
+struct IsIndexCont<std::array<size_t,N>> : std::true_type {};
 
 
 // trait querries
@@ -49,12 +49,12 @@ constexpr int getNumDims( ARRAY<T,N> &a )
 
 
 template<class F, class...Args>
-struct is_callable
+struct IsCallable
 {
     template<class U> static auto test(U* p) -> decltype((*p)(std::declval<Args>()...), void(), std::true_type());
     template<class U> static auto test(...) -> decltype(std::false_type());
 
-    static constexpr bool value = decltype(test<F>(0))::value;
+    static constexpr bool VALUE = decltype(test<F>(0))::value;
 };
 
 // type generators
