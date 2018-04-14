@@ -275,6 +275,7 @@ void serialize( Archive &ar, const unsigned int version)
           auto ind = this->_1d2nd(i);
           d->operator()(ind) = q;
         }
+        return *this;
     }
 
     template <typename Q>
@@ -286,6 +287,7 @@ void serialize( Archive &ar, const unsigned int version)
           auto ind = this->_1d2nd(i);
           d->operator()(ind) += q;
         }
+        return *this;
     }
 
     template <typename Q>
@@ -297,6 +299,7 @@ void serialize( Archive &ar, const unsigned int version)
           auto ind = this->_1d2nd(i);
           d->operator()(ind) -= q;
         }
+        return *this;
     }
 
     template <typename Q>
@@ -308,6 +311,7 @@ void serialize( Archive &ar, const unsigned int version)
           auto ind = this->_1d2nd(i);
           d->operator()(ind) *= q;
         }
+        return *this;
     }
 
     template <typename Q>
@@ -319,6 +323,7 @@ void serialize( Archive &ar, const unsigned int version)
           auto ind = this->_1d2nd(i);
           d->operator()(ind) /= q;
         }
+        return *this;
     }
 
     
@@ -331,6 +336,7 @@ void serialize( Archive &ar, const unsigned int version)
           auto ind = this->_1d2nd(i);
           d->operator()(ind) = f(ind);
         }
+        return *this;
     }
 
     Field& operator+=(const Field& f)
@@ -342,6 +348,7 @@ void serialize( Archive &ar, const unsigned int version)
           auto ind = this->_1d2nd(i);
           d->operator()(ind) += f(ind);
         }
+        return *this;
     }
 
     Field& operator-=(const Field& f)
@@ -353,6 +360,7 @@ void serialize( Archive &ar, const unsigned int version)
           auto ind = this->_1d2nd(i);
           d->operator()(ind) -= f(ind);
         }
+        return *this;
     }
 
     Field& operator*=(const Field& f)
@@ -364,6 +372,7 @@ void serialize( Archive &ar, const unsigned int version)
           auto ind = this->_1d2nd(i);
           d->operator()(ind) *= f(ind);
         }
+        return *this;
     }
 
     Field& operator/=(const Field& f)
@@ -375,6 +384,7 @@ void serialize( Archive &ar, const unsigned int version)
           auto ind = this->_1d2nd(i);
           d->operator()(ind) /= f(ind);
         }
+        return *this;
     }
 
 
