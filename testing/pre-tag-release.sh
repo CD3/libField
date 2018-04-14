@@ -6,7 +6,6 @@ bindir=${srcdir}/.build-and-test
 function cleanup ()
 {
   [[ -d ${bindir} ]] && rm -r ${bindir}
-  exit 1
 }
 set -e 
 trap cleanup EXIT
@@ -70,4 +69,3 @@ cmake --build .
 ./main
 
 echo "PASSED"
-
