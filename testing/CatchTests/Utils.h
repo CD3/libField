@@ -43,7 +43,7 @@ public:
     ArrayEqual( ARRAY a_ ): a(a_) {}
 
     // Performs the test for this matcher
-    virtual bool match( ARRAY const& a_ ) const override {
+    bool match( ARRAY const& a_ ) const override {
       if( a_.size() != a.size() )
         return false;
 
@@ -62,7 +62,7 @@ public:
     // include any provided data (the begin/ end in this case) and
     // be written as if it were stating a fact (in the output it will be
     // preceded by the value under test).
-    virtual std::string describe() const {
+    std::string describe() const override {
         std::ostringstream ss;
         ss << "is same as {";
         for(int i = 0; i < a.size(); i++)
