@@ -93,9 +93,10 @@ install(EXPORT ${PROJECT_NAME}Targets
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
 "include(CMakeFindDependencyMacro)
 find_dependency(Boost)
-find_dependency( Eigen3 )
+if( NOT TARGET Eigen3::eigen3 )
 add_library( Eigen3::eigen3 INTERFACE IMPORTED )
 set_property( TARGET Eigen3::eigen3 PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${EIGEN3_INCLUDE_DIR})
+endif()
 include(\${CMAKE_CURRENT_LIST_DIR}/${PROJECT_NAME}Targets.cmake)
 "
   )
