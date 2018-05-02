@@ -123,9 +123,7 @@ void serialize( Archive &ar, const unsigned int version)
   template <typename... Args>
   auto operator()(Args... args) const
   {
-    std::array<COORD, NUMDIMS> c;
-    getCoord_imp<0>(c, args...);
-    return c;
+    return this->getCoord(args...);
   }
 
   /** Return coordinate specified by indecies given as arguments */
@@ -135,6 +133,16 @@ void serialize( Archive &ar, const unsigned int version)
     std::array<COORD, NUMDIMS> c;
     getCoord_imp<0>(c, args...);
     return c;
+  }
+
+  template <typename I>
+  auto getCoord(I i) const
+  {
+    BOOST_STATIC_ASSERT_MSG(NUMDIMS == 1,
+        "CoordinateSystem<COORD,NUMDIMS> "
+        "getCoord called with wrong "
+        "number of arguments.");
+    return axes[0]->operator[](i);
   }
 
   /** Return a sliced coordinate system view based on an index generator. */

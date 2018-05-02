@@ -77,10 +77,10 @@ TEST_CASE( "Array of Objects vs. Object of Arrays" ) {
 
     for(int i = 0; i < Nx; i++)
     {
-      CHECK(Fields.rho.getCoord(i)[0] == Approx(i*(10. / (Nx-1))));
-      CHECK(Fields.c.getCoord(i)[0] == Approx(i*(10. / (Nx-1))));
-      CHECK(Fields.kappa.getCoord(i)[0] == Approx(i*(10. / (Nx-1))));
-      CHECK(Fields.T.getCoord(i)[0] == Approx(i*(10. / (Nx-1))));
+      CHECK(Fields.rho.getCoord(i) == Approx(i*(10. / (Nx-1))));
+      CHECK(Fields.c.getCoord(i) == Approx(i*(10. / (Nx-1))));
+      CHECK(Fields.kappa.getCoord(i) == Approx(i*(10. / (Nx-1))));
+      CHECK(Fields.T.getCoord(i) == Approx(i*(10. / (Nx-1))));
     }
 
     for(int i = 0; i < Nx; ++i)
