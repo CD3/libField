@@ -150,7 +150,7 @@ for(int i = 0; i < T.size(0); i++)
   for(int j = 0; j < T.size(1); j++)
   {
     auto x = T.getCoords(i,j); // this returns a 2-element array with the x and y coordinates
-    T(i,j) = exp
+    T(i,j) = exp(0.5*pow(x[0]/0.5,2))*exp(0.5pow((x[1]-5)/0.5,2))
   }
 }
 ```
@@ -161,7 +161,7 @@ underlying `CoordinateSystem` class and getting raw pointers to the data stored 
 ## Slicing
 
 One of the nice features provided by the `Field` class is the ability to slice it. Slicing a field
-returns a field view than can be used access a subset the field data (and coordinates) as if they were their
+returns a field view than can be used to access a subset the field data (and coordinates) as if they were their
 own field object. For example, it is possible to create a one-dimensional field that contains temperature values
 along the line x = -3.
 ```C++
