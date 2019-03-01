@@ -114,7 +114,7 @@ discretized version of this field:
 To do this, we need to loop through the elements in the field, determine the coordinates for each
 element, and compute the value of the element based on these coordinates. Elements in the field are
 accessed with the `operator()()` method, which takes the element indices. The `Field` class also provides
-a method named `getCoords()` that takes the element indices as well and returns an array of the coordinate values.
+a method named `getCoord()` that takes the element indices as well and returns an array of the coordinate values.
 So, initializing the field to a Gaussian distribution could be accomplished like this
 (Note: you will need to import the `cmath` header to use `exp()`):
 
@@ -123,7 +123,7 @@ for(int i = 0; i < T.size(0); i++)
 {
   for(int j = 0; j < T.size(1); j++)
   {
-    auto x = T.getCoords(i,j); // this returns a 2-element array with the x and y coordinates
+    auto x = T.getCoord(i,j); // this returns a 2-element array with the x and y coordinates
     T(i,j) = exp
   }
 }

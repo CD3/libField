@@ -46,8 +46,8 @@ support for field slicing.
 
 Physics simulations often require you to work with large arrays of data that correspond to some physical quantity
 that is defined at multiple points in space (i.e. a field). For example, a finite-difference heat solver would
-create store an initial temperature distribution and then "update" this distribution as it stepped forward in time.
-The finite-difference time-domain method for electrodynamics operates on an arrays of data for the electric and
+create an initial temperature distribution and then "update" this distribution as it stepped forward in time.
+The finite-difference time-domain method for electrodynamics operates on an array of data for the electric and
 magnetic fields.
 
 Since these algorithms are used for a physics simulation, they depend on the coordinate system. For example,
@@ -56,8 +56,8 @@ of the spacing between consecutive field elements in the x direction.
 
 `libField` aims to provide a simple, clean API for creating, storing, accessing, and manipulating field data that
 would be used to write physics simulations, and this simple API is stressed above all else. Currently, minimal
-effort has been made to make it "fast". The code tries to be efficient and fast, but no great effort has been
-made to optimize it... yet. `libField` is in the very early stages of development, and once the API stabilizes,
+effort has been made to make it “fast". The code tries to be efficient and fast, but no great effort has been
+made to optimize it... yet. `libField` is in the early stages of development, and once the API stabilizes,
 and has a full test harness, the underlying implementation can be optimized.
 
 # Tutorial
@@ -65,7 +65,7 @@ and has a full test harness, the underlying implementation can be optimized.
 ## Compiling
 
 To use `libField`, you only just need to include `Field.hpp` in your program. Note that `libField` depends on
-`boost`, but only the header library. Specifically, `Field.hpp` will include `boost/array.hpp`, `boost/multi_array.hpp`, `boost/optional.hpp', and 'boost/assert.hpp'.
+`boost`, but only the header library. Specifically, `Field.hpp` will include `boost/array.hpp`, `boost/multi_array.hpp`, `boost/optional.hpp`, and 'boost/assert.hpp'.
 
 ```C++
 #include <Field.hpp>
@@ -90,9 +90,9 @@ set_target_properties( myProg PROPERTIES CXX_STANDARD 14)
 ```
 
 If you are not using `cmake`, then you need to start. If you are still just writing your simulations in a single file (called `main.cpp` or `myProg.cpp` for example),
-then you can just copy this directory to your project directory and compile it using `gcc`
+then you can just copy this directory to your project directory and compile using `gcc`
 
-```
+```C++
 > gcc -IlibField/src/ -std=c++14 main.cpp -o myProg
 ```
 
@@ -100,19 +100,19 @@ then you can just copy this directory to your project directory and compile it u
 
 The main class provided by `libField` is the `Field` class. This is basically a
 multi-dimensional array with a coordinate system attached. The class takes two
-template arguments for the type used to store data, and the number of
+template arguments: the type used to store data, and the number of
 dimensions in the field. For example, to create a two-dimensional field that
 stores `double`s with 11 elements in the x direction and 15 elements in the y
 direction you would just pass the dimension sizes to the constructor.
 
-```
+```C++
 Field<double,2> T(11,15);
 ```
 
 This will automatically allocate memory for both the field data, and the coordinate system. However, we still
 need to initialize the coordinate system axes. This is done with the `setCoordinateSystem()` method of the
 `Field` class. We usually want to discretize the coordinate axes in some regular fashion. For example, we may
-want to discretize the x axis uniformly from -3 to 3, and y axis uniformly from 0 to 10. `libField` provides
+want to discretize the x axis uniformly from -3 to 3, and the y axis uniformly from 0 to 10. `libField` provides
 helper functions to take care of these common cases.
 
 ```C++
@@ -120,7 +120,7 @@ helper functions to take care of these common cases.
 ```
 
 (Note: by using 11 for the size in the x direction, x = 0 will be included in the axis (at index 5))
-We will probably want to initialize the field data. Typically we would want to start off with zero. This
+We will probably want to initialize the field data. Typically, we would want to start off with zero. This
 can be done with the `set()` method.
 
 ```C++
@@ -140,7 +140,7 @@ discretized version of this field:
 To do this, we need to loop through the elements in the field, determine the coordinates for each
 element, and compute the value of the element based on these coordinates. Elements in the field are
 accessed with the `operator()()` method, which takes the element indices. The `Field` class also provides
-a method named `getCoords()` that takes the element indices as well and returns an array of the coordinate values.
+a method named `getCoord()` that takes the element indices as well and returns an array of the coordinate values.
 So, initializing the field to a Gaussian distribution could be accomplished like this
 (Note: you will need to import the `cmath` header to use `exp()`):
 
@@ -149,8 +149,8 @@ for(int i = 0; i < T.size(0); i++)
 {
   for(int j = 0; j < T.size(1); j++)
   {
-    auto x = T.getCoords(i,j); // this returns a 2-element array with the x and y coordinates
-    T(i,j) = exp(0.5*pow(x[0]/0.5,2))*exp(0.5pow((x[1]-5)/0.5,2))
+    auto x = T.getCoord(i,j); // this returns a 2-element array with the x and y coordinates
+    T(i,j) = exp
   }
 }
 ```
@@ -161,7 +161,7 @@ underlying `CoordinateSystem` class and getting raw pointers to the data stored 
 ## Slicing
 
 One of the nice features provided by the `Field` class is the ability to slice it. Slicing a field
-returns a field view than can be used to access a subset the field data (and coordinates) as if they were their
+returns a field view than can be used access a subset the field data (and coordinates) as if they were their
 own field object. For example, it is possible to create a one-dimensional field that contains temperature values
 along the line x = -3.
 ```C++
