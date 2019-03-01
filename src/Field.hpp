@@ -150,9 +150,12 @@ void serialize( Archive &ar, const unsigned int version)
     };
 
     // coord system access
-    auto &getCoordinateSystem() { return *cs; };
     auto getCoordinateSystemPtr() { return cs; };
+    auto &getCoordinateSystem() { return *cs; };
     auto &getAxis(size_t i) { return cs->getAxis(i); }
+    const auto &getCoordinateSystem() const { return *cs; };
+    const auto &getAxis(size_t i) const { return cs->getAxis(i); }
+
     template <typename... Args>
     auto setCoordinateSystem(Args... args)
     {
