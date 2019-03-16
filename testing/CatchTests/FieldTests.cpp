@@ -153,26 +153,41 @@ TEST_CASE( "Field Operators" ) {
   for(int i = 0; i < 2; i++)
     for(int j = 0; j < 3; j++)
       CHECK(U[i][j] == Approx(3.0));
+  for(int i = 0; i < 2; i++)
+    for(int j = 0; j < 3; j++)
+      CHECK(T[i][j] == Approx(3.0));
 
   U += T;
   for(int i = 0; i < 2; i++)
     for(int j = 0; j < 3; j++)
       CHECK(U[i][j] == Approx(6.0));
+  for(int i = 0; i < 2; i++)
+    for(int j = 0; j < 3; j++)
+      CHECK(T[i][j] == Approx(3.0));
 
   U *= T;
   for(int i = 0; i < 2; i++)
     for(int j = 0; j < 3; j++)
       CHECK(U[i][j] == Approx(18.0));
+  for(int i = 0; i < 2; i++)
+    for(int j = 0; j < 3; j++)
+      CHECK(T[i][j] == Approx(3.0));
 
   U -= T;
   for(int i = 0; i < 2; i++)
     for(int j = 0; j < 3; j++)
       CHECK(U[i][j] == Approx(15.0));
+  for(int i = 0; i < 2; i++)
+    for(int j = 0; j < 3; j++)
+      CHECK(T[i][j] == Approx(3.0));
 
   U /= T;
   for(int i = 0; i < 2; i++)
     for(int j = 0; j < 3; j++)
       CHECK(U[i][j] == Approx(5.0));
+  for(int i = 0; i < 2; i++)
+    for(int j = 0; j < 3; j++)
+      CHECK(T[i][j] == Approx(3.0));
 }
 
 TEST_CASE("Field Slicing")
@@ -314,3 +329,150 @@ TEST_CASE( "Field Output Operator" ) {
   CHECK( ss.str() == expected );
 }
 
+TEST_CASE( "Field Semantics" ) {
+
+  SECTION("1d")
+  {
+  Field<double,1> a(10);
+  for(int i = 0; i < 10; ++i)
+    a(i) = 0.1*i + 2;
+  a.setCoordinateSystem(Uniform(0,1));
+
+  SECTION("Is copy constructible")
+  {
+    Field<double,1> b(a);
+    CHECK( b.size() == 10 );
+    for(int i = 0; i < 10; ++i)
+      CHECK( b(i) == Approx(2+i*0.1) );
+    CHECK(b.getAxis(0)[0] == Approx(0));
+    CHECK(b.getAxis(0)[9] == Approx(1));
+
+  }
+
+  SECTION("Is move constructible from var with std::move()")
+  {
+    Field<double,1> b(std::move(a));
+    CHECK( b.size() == 10 );
+    for(int i = 0; i < 10; ++i)
+      CHECK( b(i) == Approx(2+i*0.1) );
+    CHECK(b.getAxis(0)[0] == Approx(0));
+    CHECK(b.getAxis(0)[9] == Approx(1));
+
+    // the data and coordinate system pointers of a should be invalid now
+    CHECK( b.getDataPtr());
+    CHECK( b.getCoordinateSystemPtr());
+    CHECK(!a.getDataPtr());
+    CHECK(!a.getCoordinateSystemPtr());
+  }
+
+  SECTION("Is copy construct assignable")
+  {
+    Field<double,1> b = a;
+    CHECK( b.size() == 10 );
+    for(int i = 0; i < 10; ++i)
+      CHECK( b(i) == Approx(2+i*0.1) );
+
+  }
+
+  SECTION("Is assignable")
+  {
+    Field<double,1> b;
+    b = a;
+    CHECK( b.size() == 10 );
+    for(int i = 0; i < 10; ++i)
+      CHECK( b(i) == Approx(2+i*0.1) );
+
+    SECTION("and not linked")
+    {
+      b(0) = 100;
+      CHECK( b(0) == Approx(100) );
+      CHECK( a(0) == Approx(2) );
+
+      b.getAxis(0)[9] = 100;
+      CHECK(b.getAxis(0)[9] == Approx(100));
+      CHECK(a.getAxis(0)[9] == Approx(1));
+    }
+  }
+   
+  }
+
+  SECTION("2d")
+  {
+  Field<double,2> a(10,20);
+  for(int i = 0; i < 10; ++i)
+  {
+    for(int j = 0; j < 20; ++j)
+    {
+      a(i,j) = 0.2*j + 0.1*i + 2;
+    }
+  }
+
+  SECTION("Is copy constructible")
+  {
+    Field<double,2> b(a);
+    CHECK( b.size(0) == 10 );
+    CHECK( b.size(1) == 20 );
+    CHECK( b.size() == 200 );
+    for(int i = 0; i < 10; ++i)
+    {
+      for(int j = 0; j < 20; ++j)
+      {
+        CHECK( b(i,j) == Approx(2+i*0.1+j*0.2) );
+      }
+    }
+
+  }
+
+  SECTION("Is copy construct assignable")
+  {
+    Field<double,2> b = a;
+    CHECK( b.size(0) == 10 );
+    CHECK( b.size(1) == 20 );
+    CHECK( b.size() == 200 );
+    for(int i = 0; i < 10; ++i)
+    {
+      for(int j = 0; j < 20; ++j)
+      {
+        CHECK( b(i,j) == Approx(2+i*0.1+j*0.2) );
+      }
+    }
+  }
+
+  SECTION("Is assignable")
+  {
+    Field<double,2> b;
+    b = a;
+    CHECK( b.size(0) == 10 );
+    CHECK( b.size(1) == 20 );
+    CHECK( b.size() == 200 );
+    for(int i = 0; i < 10; ++i)
+    {
+      for(int j = 0; j < 20; ++j)
+      {
+        CHECK( b(i,j) == Approx(2+i*0.1+j*0.2) );
+      }
+    }
+  }
+   
+  }
+
+
+}
+
+TEST_CASE( "Field Copy vs. Move" ) {
+
+  Field<double, 3> F1(1000,1000,1000);
+
+  BENCHMARK("Field Copy")
+  {
+    Field<double,3> F2(F1);
+  }
+
+  BENCHMARK("Field Move")
+  {
+    Field<double,3> F2(std::move(F1));
+  }
+
+
+
+}

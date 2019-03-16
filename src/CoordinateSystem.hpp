@@ -66,11 +66,14 @@ void serialize( Archive &ar, const unsigned int version)
       axes[i].reset(new axis_type(boost::extents[sizes[i]]));
   }
 
-  CoordinateSystem(std::array<std::shared_ptr<axis_type>, NUMDIMS> axes_)
+  CoordinateSystem(const std::array<std::shared_ptr<axis_type>, NUMDIMS>& axes_)
   {
+    // we need to deep copy the axes, not just the shared pointer to them.
     for (int i = 0; i < NUMDIMS; i++)
-      axes[i] = axes_[i];
+      axes[i].reset( new axis_type( *axes_[i] ) );
   }
+
+
 
   ~CoordinateSystem() = default;
 

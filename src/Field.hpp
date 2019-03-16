@@ -11,15 +11,11 @@
 #include "CoordinateSystem.hpp"
 #include "Utils.hpp"
 
-/** @file Field.hpp
-  * @brief
-  * @author C.D. Clark III
-  * @date 06/13/17
-  */
 
 /** @class Field
   * @brief A class for storing data in a field.
   * @author C.D. Clark III
+  * @date 06/13/17
   */
 template <typename T, std::size_t N>
 using arrayND = boost::multi_array<T, N, std::allocator<T>>;
@@ -51,8 +47,12 @@ void serialize( Archive &ar, const unsigned int version)
 #endif
 
     Field() = default;
-    Field(const Field&) = default;
     Field(Field&&) = default;
+
+    Field(const Field& f)
+    {
+      reset(*f.cs,*f.d);
+    }
 
     template <typename... Args>
     Field(Args... args)
@@ -190,6 +190,7 @@ void serialize( Archive &ar, const unsigned int version)
     }
 
     // data access
+    auto getDataPtr() { return d; };
     const auto &getData() const { return *d; };
     auto &getData() { return *d; };
 
@@ -330,16 +331,11 @@ void serialize( Archive &ar, const unsigned int version)
     }
 
     
-    Field& operator=(const Field& f)
+    Field& operator=(Field f)
     {
-        BOOST_ASSERT( f.size() == this->size() );
-        auto N = d->num_elements();
-        #pragma omp parallel for
-        for (int i = 0; i < N; ++i) {
-          auto ind = this->_1d2nd(i);
-          d->operator()(ind) = f(ind);
-        }
-        return *this;
+       d.swap( f.d );
+       cs.swap(f.cs );
+       return *this;
     }
 
     Field& operator+=(const Field& f)
