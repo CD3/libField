@@ -129,7 +129,7 @@ void serialize( Archive &ar, const unsigned int version)
     return this->getCoord(args...);
   }
 
-  /** Return coordinate specified by indecies given as arguments */
+  /** Return coordinate specified by indices given as arguments */
   template <typename... Args>
   auto getCoord(Args... args) const
   {
@@ -138,7 +138,20 @@ void serialize( Archive &ar, const unsigned int version)
     return c;
   }
 
-  template <typename I>
+  /** Return coordinate specified by indices given in an index container */
+  template <typename I,
+            typename std::enable_if<IsIndexCont<I>::value,int>::type = 0>
+  auto getCoord(I ind) const
+  {
+    std::array<COORD, NUMDIMS> c;
+    for(int i = 0; i < NUMDIMS; ++i)
+      c[i] = axes[i]->operator[](ind[i]);
+    return c;
+  }
+
+  /** For a 1D coordinate system, return the coordinate directly, instead of an array containing the coordinates. */
+  template <typename I,
+              typename std::enable_if<std::is_integral<I>::value,int>::type = 0>
   auto getCoord(I i) const
   {
     BOOST_STATIC_ASSERT_MSG(NUMDIMS == 1,
