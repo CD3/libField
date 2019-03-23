@@ -36,6 +36,27 @@ class Field
     std::shared_ptr<array_type> d;
     std::shared_ptr<cs_type> cs;
 
+  protected:
+    /**
+     * Utility function for converting 1d index to an Nd
+     * array of indices.
+     */
+    auto _1d2nd(size_t i) const
+    {
+        auto shape = d->shape();
+
+        std::array<size_t, NUMDIMS> ind;
+        int NN = shape[0];
+        for (int j = 1; j < NUMDIMS; ++j)
+            NN *= shape[j];
+        for (int j = 0; j < NUMDIMS; ++j) {
+            NN /= shape[j];
+            ind[j] = i / NN;
+            i -= ind[j] * NN;
+        }
+        return ind;
+    }
+
   public:
 #if SERIALIZATION_ENABLED
 template<class Archive>
@@ -224,16 +245,99 @@ void serialize( Archive &ar, const unsigned int version)
     auto size(int i) const { return d->shape()[i]; }
 
 
-    // TODO: allow both of these function to be called set.
+    /**
+     * Evaluates callable f for each coordinate and sets the field value to value returned by callable.
+     * Field may be evaluated in PARRALLEL. Callable should NOT depend on the order of being called.
+     * 
+     * @param f a callable object (function, funtor, lambda, std::function, etc.) that accepts one argument and returns a value.
+     *
+     * Argument passed to callable f will be an array of coordinates.
+     *
+     */
     template<typename F>
-    auto set_f( F f )
+    auto set_f( F f ) -> decltype(  (*d)(0) = f(cs->getCoord(_1d2nd(0))), void()   )
     {
         auto N = d->num_elements();
+        #pragma omp parallel for
+        for (int i = 0; i < N; ++i) {
+          auto ind = this->_1d2nd(i);
+          d->operator()(ind) = f(cs->getCoord(ind));
+        }
+    }
+
+    /**
+     * Evaluates callable f that returns an optional type (boost::optional or std::optional)
+     * for each coordinate. If the optional is set, then the valu eof the field is set. Otherwise,
+     * the field is left untouched.
+     * Field may be evaluated in PARRALLEL. Callable should NOT depend on the order of being called.
+     * 
+     * @param f a callable object (function, funtor, lambda, std::function, etc.) that accepts one argument and returns an optional value.
+     *
+     * Argument passed to callable f will be an array of coordinates.
+     *
+     */
+    template<typename F>
+    auto set_f( F f ) -> decltype( (bool)f(cs->getCoord(_1d2nd(0))), (*d)(0) = f(cs->getCoord(_1d2nd(0))).value(), void()   )
+    {
+        auto N = d->num_elements();
+        #pragma omp parallel for
+        for (int i = 0; i < N; ++i) {
+          auto ind = this->_1d2nd(i);
+          auto val = f(cs->getCoord(ind));
+          if(val)
+            d->operator()(ind) = val.value();
+        }
+    }
+   
+    /**
+     * Evaluates callable f for each indices and sets the field value to value returned by callable.
+     * Callable is passed a container of indicies and a pointer to the coordinate system.
+     * Field may be evaluated in PARRALLEL. Callable should NOT depend on the order of being called.
+     * 
+     * @param f a callable object (function, funtor, lambda, std::function, etc.) that accepts two arguments and returns a value.
+     *
+     * Arguments passed to callable f will be an array of indices, and a pointer to the coordinate system.
+     *
+     */
+    template<typename F>
+    auto set_f( F f ) -> decltype(  (*d)(0) = f(_1d2nd(0),cs), void()   )
+    {
+        auto N = d->num_elements();
+        #pragma omp parallel for
         for (int i = 0; i < N; ++i) {
           auto ind = this->_1d2nd(i);
           d->operator()(ind) = f(ind, cs);
         }
     }
+
+    /**
+     * Evaluates callable f for each coordinate index. If the optional returned by f is set, the field for the coordinate is set.
+     * Otherwise, the field is left untouched.
+     * Callable is passed a container of indicies and a pointer to the coordinate system.
+     * Field may be evaluated in PARRALLEL. Callable should NOT depend on the order of being called.
+     * 
+     * @param f a callable object (function, funtor, lambda, std::function, etc.) that accepts two arguments and returns a value.
+     *
+     * Arguments passed to callable f will be an array of indices, and a pointer to the coordinate system.
+     *
+     */
+    template<typename F>
+    auto set_f( F f ) -> decltype( (bool)f(_1d2nd(0),cs), (*d)(0) = f(_1d2nd(0),cs).value(), void()   )
+    {
+        auto N = d->num_elements();
+        #pragma omp parallel for
+        for (int i = 0; i < N; ++i) {
+          auto ind = this->_1d2nd(i);
+          auto val = f(ind,cs);
+          if(val)
+            d->operator()(ind) = val.value();
+        }
+    }
+
+
+    // NOTE: we wanted to combined set and set_f into a single function, but this isn't possible in general.
+    // We cannot assume that the set_f version should be called if a function is passed in, because the user may
+    // actually want to store the functions in the field.
 
     template <typename Q>
     auto set(Q q)
@@ -242,7 +346,7 @@ void serialize( Archive &ar, const unsigned int version)
         #pragma omp parallel for
         for (int i = 0; i < N; ++i) {
           auto ind = this->_1d2nd(i);
-          d->operator()(ind) = q;
+          d->operator()(ind) = std::move(q);
         }
     }
 
@@ -388,22 +492,6 @@ void serialize( Archive &ar, const unsigned int version)
 
 
 
-  protected:
-    auto _1d2nd(size_t i) const
-    {
-        auto shape = d->shape();
-
-        std::array<size_t, NUMDIMS> ind;
-        int NN = shape[0];
-        for (int j = 1; j < NUMDIMS; ++j)
-            NN *= shape[j];
-        for (int j = 0; j < NUMDIMS; ++j) {
-            NN /= shape[j];
-            ind[j] = i / NN;
-            i -= ind[j] * NN;
-        }
-        return ind;
-    }
 };
 
 #endif
