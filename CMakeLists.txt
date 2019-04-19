@@ -35,9 +35,6 @@ set( cxx_needed_features
    )
 
 find_package( Boost REQUIRED )
-find_package( Eigen3 REQUIRED )
-add_library( Eigen3::eigen3 INTERFACE IMPORTED )
-set_property( TARGET Eigen3::eigen3 PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${EIGEN3_INCLUDE_DIR})
 if( SERIALIZATION )
   find_package( Boost REQUIRED COMPONENTS serialization)
 endif()
@@ -57,7 +54,6 @@ target_sources(
 target_link_libraries(${LIB_NAME}
   INTERFACE
     Boost::boost
-    Eigen3::eigen3
     $<$<BOOL:${SERIALIZATION}>:Boost::serialization>)
 
 target_compile_definitions(${LIB_NAME}
@@ -93,10 +89,6 @@ install(EXPORT ${PROJECT_NAME}Targets
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
 "include(CMakeFindDependencyMacro)
 find_dependency(Boost)
-if( NOT TARGET Eigen3::eigen3 )
-add_library( Eigen3::eigen3 INTERFACE IMPORTED )
-set_property( TARGET Eigen3::eigen3 PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${EIGEN3_INCLUDE_DIR})
-endif()
 include(\${CMAKE_CURRENT_LIST_DIR}/${PROJECT_NAME}Targets.cmake)
 "
   )
