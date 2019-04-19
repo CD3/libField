@@ -30,10 +30,6 @@ configure_file( "${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}_version.h"
                 "${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}_version.h")
 
 
-set( cxx_needed_features
-     cxx_auto_type
-   )
-
 find_package( Boost REQUIRED )
 if( SERIALIZATION )
   find_package( Boost REQUIRED COMPONENTS serialization)
@@ -46,6 +42,7 @@ target_include_directories( ${LIB_NAME} INTERFACE
   $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/src>
   $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
 )
+target_compile_features( ${LIB_NAME} INTERFACE cxx_std_14 )
 target_sources(
   ${LIB_NAME}
   INTERFACE

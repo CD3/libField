@@ -23,7 +23,6 @@ target_compile_definitions( ${testName} PRIVATE -DTESTING )
 target_link_libraries(${testName} Field)
 target_include_directories( ${testName} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include" )
 set_target_properties(${testName} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${binDir})
-set_target_properties(${testName} PROPERTIES CXX_STANDARD 14)
 
 add_test(NAME ${testName} 
          WORKING_DIRECTORY ${buildDir}
@@ -35,46 +34,5 @@ endif()
 
 
 
-## _   _             _             ____                  _                          _        
-##| \ | | ___  _ __ (_)_   _ ___  | __ )  ___ _ __   ___| |__  _ __ ___   __ _ _ __| | _____ 
-##|  \| |/ _ \| '_ \| | | | / __| |  _ \ / _ \ '_ \ / __| '_ \| '_ ` _ \ / _` | '__| |/ / __|
-##| |\  | (_) | | | | | |_| \__ \ | |_) |  __/ | | | (__| | | | | | | | | (_| | |  |   <\__ \
-##|_| \_|\___/|_| |_|_|\__,_|___/ |____/ \___|_| |_|\___|_| |_|_| |_| |_|\__,_|_|  |_|\_\___/
-                                                                                           
-
-#set( binDir ${CMAKE_BINARY_DIR}/benchmarkBin )
-
-## Benchmarks written with the Nonius framework are
-## automatically detected. Just put the source files
-## in the `NoniusBenchmarks` directory.
-
-#set( benchmark_DIR ./NoniusBenchmarks)
-## Search for sources.
-#file( GLOB_RECURSE benchmark_SOURCES
-      #RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
-      #"${benchmark_DIR}/*.cpp" )
-    #message(STATUS "Detected Nonius-based Benchmark Sources:")
-#foreach(benchmarkSrc ${benchmark_SOURCES})
-  #message(STATUS "  ${benchmarkSrc}" )
-#endforeach()
-
-## Nonius requires a threading library
-#find_package(Threads)
-
-#if(Threads_FOUND)
-
-## Add benchmark executable
-#set( benchmarkName NoniusBenchmarks )
-#add_executable(${benchmarkName} ${benchmark_SOURCES})
-##target_compile_definitions( ${benchmarkName} )
-
-## Link dependencies
-#target_link_libraries(${benchmarkName} Threads::Threads ) # If your project builds a library, link to it here
-
-## Make sure that testing binaries are created in the binDir directory and use C++11
-#set_target_properties(${benchmarkName} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${binDir} CXX_STANDARD 14)
-
-
-#endif()
 
 
