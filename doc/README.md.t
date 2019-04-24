@@ -9,7 +9,7 @@ Consider writing a 3-dimensional finite-difference heat solver. `libField` makes
 to create an array for the temperature and setup a coordinate system.
 
 ```
-\shell{cat doc/examples/usage/demo-libField.cpp}
+\shell{cat ./examples/usage/demo-libField.cpp}
 ```
 
 The `Field` class is a small class that uses the boost `multi_array` class to store data and contains a coordinate
