@@ -62,32 +62,65 @@ and has a full test harness, the underlying implementation can be optimized.
 
 # Tutorial
 
-## Compiling
+## Installing
 
-To use `libField`, you only just need to include `Field.hpp` in your program. Note that `libField` depends on
+To use `libField`, you just need to include `Field.hpp` in your program. Note that `libField` depends on
 `boost`, but only the header library. Specifically, `Field.hpp` will include `boost/array.hpp`, `boost/multi_array.hpp`, `boost/optional.hpp`, and 'boost/assert.hpp'.
+
 
 ```C++
 #include <Field.hpp>
 ```
 
-The simplest way to do this is to just add the `libField` project directory as a sub-directory in your `CMakeLists.txt`
+So `Field.hpp` just needs to be in your include path. There are multiple ways to acheive this.
+
+### Add to your CMake configuration using `add_subdirectory`.
+
+You can the `libField` project directory as a sub-directory in your `CMakeLists.txt`
 ```CMake
 ...
 # add the libField project
 add_subdirectory(libField)
-# include the directories required by libField
-include_directories(${libField_INCLUDE_DIRS})
+# define your target that depends on libField
+# for example...
+add_executable( myApp main.cpp )
+# link your target to libField
+target_link_libraries( myApp libField::Field )
 ...
 
 ```
 
-`libField` also requires C++14. To enable the 14 standard, just add set the `CXX_STANDARD` property for the target that builds your executable.
+`libField` requires C++14. Linking against the `libField::Field` target will automatically add this requiement.
 
-```C++
-add_executable(myProg main.cpp)
-set_target_properties( myProg PROPERTIES CXX_STANDARD 14)
+### Install `libField`
+
+You can install `libField` with CMake. This will install a `libFieldConfig.cmake` file that CMake will use to detect and configure `libField`.
+
+```Bash
+$ cd libField
+$ mkdir build
+$ cd build
+$ cmake ..
+$ cmake --build .
+$ cmake --build . --target install
 ```
+
+Now you can find `libField` in your `CMakeLists.txt` file using the `find_package` command and link
+against the `libField::Field` target.
+```CMake
+...
+# find libField
+find_package(libField)
+# define your target that depends on libField
+# for example...
+add_executable( myApp main.cpp )
+# link your target to libField
+target_link_libraries( myApp libField::Field )
+...
+
+```
+
+### Manual/Old School
 
 If you are not using `cmake`, then you need to start. If you are still just writing your simulations in a single file (called `main.cpp` or `myProg.cpp` for example),
 then you can just copy this directory to your project directory and compile using `gcc`
