@@ -15,12 +15,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 option( SERIALIZATION          "Enalbe Boost serialization. This requires the Boost.Serialization library, and defining BOOST_NO_MEMBER_TEMPLATE_FREINDS." OFF )
 
 project(libField)
-if( STANDALONE )
-  include(macro-git_version)
-  GIT_VERSION(${PROJECT_NAME})
-else()
-  set(${PROJECT_NAME}_VERSION "X.X-subproject")
-endif()
+include(macro-git_version)
+GIT_VERSION(${PROJECT_NAME})
 message(STATUS "${PROJECT_NAME} version: ${${PROJECT_NAME}_VERSION_FULL}")
 
 # need to run configure_file twice
