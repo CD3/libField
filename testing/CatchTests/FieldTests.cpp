@@ -1,3 +1,4 @@
+#define CATCH_CONFIG_ENABLE_BENCHMARKING
 #include "catch.hpp"
 
 #include "Field.hpp"
@@ -403,11 +404,11 @@ TEST_CASE("Field Semantics")
 
 TEST_CASE("Field Copy vs. Move")
 {
-  Field<double, 3> F1(1000, 1000, 1000);
+  Field<double, 3> F1(100, 100, 100);
 
-  BENCHMARK("Field Copy") { Field<double, 3> F2(F1); }
+  BENCHMARK("Field Copy") { Field<double, 3> F2(F1); };
 
-  BENCHMARK("Field Move") { Field<double, 3> F2(std::move(F1)); }
+  BENCHMARK("Field Move") { Field<double, 3> F2(std::move(F1)); };
 }
 
 #include <boost/optional.hpp>

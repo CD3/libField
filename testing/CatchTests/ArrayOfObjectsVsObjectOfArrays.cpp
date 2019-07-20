@@ -1,3 +1,4 @@
+#define CATCH_CONFIG_ENABLE_BENCHMARKING
 #include "catch.hpp"
 #include "fakeit.hpp"
 
@@ -65,7 +66,7 @@ TEST_CASE( "Array of Objects vs. Object of Arrays" ) {
         Nodes(i).T = Nodes(i).kappa / (Nodes(i).rho * Nodes(i).c) * (dt / dx) * (Nodes(i-1).T - 2*Nodes(i).T + Nodes(i+1).T) + Nodes(i).T;
       }
     }
-    }
+    };
 
 
   }
@@ -99,7 +100,7 @@ TEST_CASE( "Array of Objects vs. Object of Arrays" ) {
         Fields.T(i) = Fields.kappa(i) / (Fields.rho(i) * Fields.c(i)) * (dt / dx) * (Fields.T(i-1) - 2*Fields.T(i) + Fields.T(i+1)) + Fields.T(i);
       }
     }
-    }
+    };
 
   }
 
