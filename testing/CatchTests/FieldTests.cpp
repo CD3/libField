@@ -435,7 +435,7 @@ TEST_CASE("Field::set_f")
       F.set(-1);
       F.set_f([](auto x) -> boost::optional<double> {
         if (x[0] < 5.5) return 2 * x[0] + 4;
-      return boost::none;
+        return boost::none;
       });
 
       CHECK(F(0) == Approx(4));
@@ -463,7 +463,7 @@ TEST_CASE("Field::set_f")
           auto x = cs->getCoord(ind);
           return 2 * x[0] + 3;
         }
-      return boost::none;
+        return boost::none;
       });
 
       CHECK(F(0) == Approx(3));
@@ -473,46 +473,42 @@ TEST_CASE("Field::set_f")
     }
   }
 
-
   SECTION("2D")
   {
-    Field<double, 2> F(11,6);
-    F.setCoordinateSystem(Uniform(0, 10), Uniform(10,15));
+    Field<double, 2> F(11, 6);
+    F.setCoordinateSystem(Uniform(0, 10), Uniform(10, 15));
 
-    CHECK(F.getCoord(0,0)[0] == Approx(0));
-    CHECK(F.getCoord(0,0)[1] == Approx(10));
-    CHECK(F.getCoord(0,5)[0] == Approx(0));
-    CHECK(F.getCoord(0,5)[1] == Approx(15));
-    CHECK(F.getCoord(10,0)[0] == Approx(10));
-    CHECK(F.getCoord(10,0)[1] == Approx(10));
-    CHECK(F.getCoord(10,5)[0] == Approx(10));
-    CHECK(F.getCoord(10,5)[1] == Approx(15));
+    CHECK(F.getCoord(0, 0)[0] == Approx(0));
+    CHECK(F.getCoord(0, 0)[1] == Approx(10));
+    CHECK(F.getCoord(0, 5)[0] == Approx(0));
+    CHECK(F.getCoord(0, 5)[1] == Approx(15));
+    CHECK(F.getCoord(10, 0)[0] == Approx(10));
+    CHECK(F.getCoord(10, 0)[1] == Approx(10));
+    CHECK(F.getCoord(10, 5)[0] == Approx(10));
+    CHECK(F.getCoord(10, 5)[1] == Approx(15));
 
     SECTION("1 arg signature")
     {
-      F.set_f([](auto x) { return 2 * x[0] + 3*x[1] + 4; });
+      F.set_f([](auto x) { return 2 * x[0] + 3 * x[1] + 4; });
 
-      CHECK(F( 0,0) == Approx(34));
-      CHECK(F(10,0) == Approx(54));
-      CHECK(F( 0,5) == Approx(49));
-      CHECK(F(10,5) == Approx(69));
+      CHECK(F(0, 0) == Approx(34));
+      CHECK(F(10, 0) == Approx(54));
+      CHECK(F(0, 5) == Approx(49));
+      CHECK(F(10, 5) == Approx(69));
     }
 
     SECTION("1 arg signature with optional return")
     {
       F.set(-1);
       F.set_f([](auto x) -> boost::optional<double> {
-        if (x[0] < 5.5 && x[1] < 12) return 2 * x[0] + 3*x[1] + 4;
+        if (x[0] < 5.5 && x[1] < 12) return 2 * x[0] + 3 * x[1] + 4;
         return boost::none;
       });
 
-      CHECK(F( 0,0) == Approx(34));
-      CHECK(F(10,0) == Approx(-1));
-      CHECK(F( 0,5) == Approx(-1));
-      CHECK(F(10,5) == Approx(-1));
-
+      CHECK(F(0, 0) == Approx(34));
+      CHECK(F(10, 0) == Approx(-1));
+      CHECK(F(0, 5) == Approx(-1));
+      CHECK(F(10, 5) == Approx(-1));
     }
-
   }
-
 }

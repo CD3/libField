@@ -339,29 +339,25 @@ TEST_CASE("getCoord Interface")
     CoordinateSystem<double, 1> Coordinates(11);
     Coordinates.set(Uniform(5, 6));
 
-    CHECK( Coordinates[0][0] == Approx(5) );
-    CHECK( Coordinates[0][1] == Approx(5.1) );
+    CHECK(Coordinates[0][0] == Approx(5));
+    CHECK(Coordinates[0][1] == Approx(5.1));
 
     {
-    auto x = Coordinates.getCoord(5);
-    CHECK( x == Approx(5.5) );
+      auto x = Coordinates.getCoord(5);
+      CHECK(x == Approx(5.5));
     }
 
     {
-      std::array<int,1> ind{5};
-      auto x = Coordinates.getCoord(ind[0]);
-      CHECK( x == Approx(5.5) );
+      std::array<int, 1> ind{5};
+      auto               x = Coordinates.getCoord(ind[0]);
+      CHECK(x == Approx(5.5));
     }
 
     {
-      std::array<int,1> ind{5};
-      auto x = Coordinates.getCoord(ind);
-      CHECK( x[0] == Approx(5.5) );
+      std::array<int, 1> ind{5};
+      auto               x = Coordinates.getCoord(ind);
+      CHECK(x[0] == Approx(5.5));
     }
-
-
-
-
   }
   SECTION("2D Interface") {}
 }
