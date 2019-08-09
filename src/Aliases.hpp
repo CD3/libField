@@ -2,10 +2,10 @@
 #define Aliases_hpp
 
 /** @file Aliases.hpp
-  * @brief 
-  * @author C.D. Clark III
-  * @date 06/16/17
-  */
+ * @brief
+ * @author C.D. Clark III
+ * @date 06/16/17
+ */
 
 #include <boost/multi_array.hpp>
 
@@ -13,9 +13,8 @@
 using IRange = boost::multi_array_types::index_range;
 
 // pull some commonly used boost types into global namespace
-using boost::multi_array_types::index_range;
 using boost::extent;
 using boost::indices;
+using boost::multi_array_types::index_range;
 
-
-#endif // include protector
+#endif  // include protector
