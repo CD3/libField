@@ -12,7 +12,7 @@ trap cleanup EXIT
 
 mkdir ${bindir}
 cd ${bindir}
-cmake .. -DCMAKE_INSTALL_PREFIX=${bindir}/install
+cmake .. -DCMAKE_INSTALL_PREFIX=${bindir}/install -DCMAKE_BUILD_TYPE=Release
 cmake --build .
 cmake --build . --target test
 
@@ -32,8 +32,8 @@ cd app
 
 cat << EOF > main.cpp
 #include <iostream>
-#include <libField_version.h>
-#include <Field.hpp>
+#include <libField/libField_version.h>
+#include <libField/Field.hpp>
 
 int main()
 {

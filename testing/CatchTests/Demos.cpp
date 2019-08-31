@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "Field.hpp"
+#include <libField/Field.hpp>
 
 TEST_CASE("Tutorial : 2D Temperature", "[tutorial]")
 {

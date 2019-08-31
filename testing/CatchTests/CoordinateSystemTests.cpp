@@ -1,6 +1,6 @@
 #include "catch.hpp"
 
-#include "CoordinateSystem.hpp"
+#include <libField/CoordinateSystem.hpp>
 #include "Utils.h"
 #include "fakeit.hpp"
 

@@ -24,7 +24,7 @@ git_version(${PROJECT_NAME})
 message(STATUS "${PROJECT_NAME} version: ${${PROJECT_NAME}_VERSION_FULL}")
 
 # need to run configure_file twice
-configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/version.h.in"
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/${PROJECT_NAME}/version.h.in"
                "${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}_version.h")
 configure_file("${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}_version.h"
                "${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}_version.h")
@@ -43,8 +43,8 @@ add_library(${LIB_NAME} INTERFACE)
 target_include_directories(
   ${LIB_NAME}
   INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
-            $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/src>
-            $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
+            $<INSTALL_INTERFACE:include>)
 target_compile_features(${LIB_NAME} INTERFACE cxx_std_14)
 target_sources(${LIB_NAME} INTERFACE)
 
@@ -66,9 +66,9 @@ install(TARGETS ${LIB_NAME}
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib
         RUNTIME DESTINATION bin
-        INCLUDES DESTINATION include/${PROJECT_NAME})
+        INCLUDES DESTINATION include)
 install(DIRECTORY src/
-        DESTINATION include/${PROJECT_NAME}
+        DESTINATION include/
         FILES_MATCHING
         PATTERN "*.hpp"
         PATTERN "*.h")

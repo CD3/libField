@@ -1,7 +1,7 @@
 #define CATCH_CONFIG_ENABLE_BENCHMARKING
 #include "catch.hpp"
 
-#include "Field.hpp"
+#include <libField/Field.hpp>
 #include "Utils.h"
 #include "fakeit.hpp"
 
