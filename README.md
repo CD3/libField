@@ -224,3 +224,57 @@ auto T4 = T.slice( indices[IRange(0,7,2)][1] );
 // T4(2) == T(4,1)
 // T4(3) == T(6,1)
 ```
+
+## Writing Field Data to a File
+
+Once you have ran a simulation to compute the values of field, you will often need to save this data. The `Field` class supports
+the `operator<<`, which will write the field to plain text in a gnuplot-compatible format.
+
+```C++
+Field<double,1> T(10);
+T.setCoordinateSystem(Uniform(0,2));
+T.set_f( [](auto x){ return x[0]*x[0]; };
+
+ostream out("Tvst.txt")
+out << T
+out.close();
+```
+
+Fields can also be written to HDF5 format, but you must link against the HDF5 C++ library. To write a field
+to HDF5, include `libField/HDF5.hpp` and call `hdf5write(...)`.
+
+```C++
+#include<libField/Field.hpp>
+#include<libField/HDF5.hpp>
+...
+Field<double,1> T(10);
+T.setCoordinateSystem(Uniform(0,2));
+T.set_f( [](auto x){ return x[0]*x[0]; };
+
+hdf5write("Tvst.h5", T);
+
+```
+
+Fields can also be *read* from HDF5, which makes storing a field for use later very simple
+```C++
+#include<libField/Field.hpp>
+#include<libField/HDF5.hpp>
+...
+Field<double,2> T(10,20);
+T.setCoordinateSystem(Uniform(0,2), Uniform(0,4));
+T.set_f( [](auto x){ return x[0]*x[0] + x[1]*x[1]; };
+
+// save field to disk
+hdf5write("Tvst.h5", T);
+
+...
+
+// load saved into another field
+// note that the data types do not have to match.
+// HDF5 will take care of the conversion.
+Field<double,2> T2;
+hdf5read("Tvst.h5", T2);
+
+```
+
+
