@@ -9,7 +9,7 @@ Consider writing a 3-dimensional finite-difference heat solver. `libField` makes
 to create an array for the temperature and setup a coordinate system.
 
 ```
-#include <Field.hpp>
+#include <libField/Field.hpp>
 
 int main()
 {
@@ -64,19 +64,19 @@ and has a full test harness, the underlying implementation can be optimized.
 
 ## Installing
 
-To use `libField`, you just need to include `Field.hpp` in your program. Note that `libField` depends on
-`boost`, but only the header library. Specifically, `Field.hpp` will include `boost/array.hpp`, `boost/multi_array.hpp`, `boost/optional.hpp`, and 'boost/assert.hpp'.
+To use `libField`, you just need to include `libField/Field.hpp` in your program. Note that `libField` depends on
+`boost`, but only the header library. Specifically, `libField/Field.hpp` will include `boost/array.hpp`, `boost/multi_array.hpp`, `boost/optional.hpp`, and 'boost/assert.hpp'.
 
 
 ```C++
-#include <Field.hpp>
+#include <libField/Field.hpp>
 ```
 
-So `Field.hpp` just needs to be in your include path. There are multiple ways to acheive this.
+So `libField/` just needs to be in your include path. There are multiple ways to achieve this.
 
 ### Add to your CMake configuration using `add_subdirectory`.
 
-You can the `libField` project directory as a sub-directory in your `CMakeLists.txt`
+You can add the `libField` project directory as a sub-directory in your `CMakeLists.txt`
 ```CMake
 ...
 # add the libField project
@@ -90,7 +90,7 @@ target_link_libraries( myApp libField::Field )
 
 ```
 
-`libField` requires C++14. Linking against the `libField::Field` target will automatically add this requiement.
+`libField` requires C++14. Linking against the `libField::Field` target will automatically add this requirement.
 
 ### Install `libField`
 
