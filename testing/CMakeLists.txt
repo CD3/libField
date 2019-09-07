@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.1)
 
 option(BUILD_UNIT_TESTS "Build unit tests for the library" ON)
 
-find_package( hdf5 QUIET)
-
 if(BUILD_UNIT_TESTS)
 
   set(binDir ${CMAKE_BINARY_DIR}/testBin)
@@ -25,10 +23,6 @@ if(BUILD_UNIT_TESTS)
   target_link_libraries(${testName} Field)
   target_include_directories(${testName}
     PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
-  if( TARGET hdf5::hdf5_cpp-static)
-    target_compile_definitions( ${testName} PRIVATE "HAVE_HDF5_CPP" )
-    target_link_libraries( ${testName} hdf5::hdf5_cpp-static )
-  endif()
   set_target_properties(${testName}
     PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${binDir})
 

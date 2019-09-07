@@ -96,10 +96,39 @@ void hdf5write(std::string name, const Field<FT, N, CT>& f, decltype(H5F_ACC_TRU
   file.close();
 }
 
+template <typename FT, size_t N, typename CT>
+void hdf5read(H5::DataSet& dset, Field<FT, N, CT>& f)
+{
+  auto dspace = dset.getSpace();
+  if (dspace.getSimpleExtentNdims() != N)
+    throw std::runtime_error("Cannot read field from dataset. Dimensions of field stored in dataset (" +
+                             std::to_string(dspace.getSimpleExtentNdims()) +
+                             ") do not match the field being read into (" +
+                             std::to_string(N) + ").");
+  hsize_t ddims[N];
+  dspace.getSimpleExtentDims(ddims);
+
+  std::array<size_t, N> dims;
+  for (int i = 0; i < N; ++i) dims[i] = ddims[i];
+
+  f = Field<FT, N, CT>(dims);
+
+  dset.read(f.data(), detail::get_hdf5_dtype_for_type<FT>());
+
+  // set all coordinates to indices
+  for(int n = 0; n < N; ++n)
+  {
+    for(int i = 0; i < f.size(n); ++i)
+    {
+      f.getAxis(n)[i] = i;
+    }
+  }
+
+}
+
 template <typename ST, typename FT, size_t N, typename CT>
 auto hdf5read(ST& container, Field<FT, N, CT>& f) -> decltype(container.createGroup(std::string()),void())
 {
-  hsize_t ddims[N];
   auto dset = container.openDataSet("field");
   auto dspace = dset.getSpace();
   if (dspace.getSimpleExtentNdims() != N)
@@ -107,12 +136,14 @@ auto hdf5read(ST& container, Field<FT, N, CT>& f) -> decltype(container.createGr
                              std::to_string(dspace.getSimpleExtentNdims()) +
                              ") do not match the field being read into (" +
                              std::to_string(N) + ").");
+  hsize_t ddims[N];
   dspace.getSimpleExtentDims(ddims);
 
   std::array<size_t, N> dims;
   for (int i = 0; i < N; ++i) dims[i] = ddims[i];
 
   f = Field<FT, N, CT>(dims);
+
   dset.read(f.data(), detail::get_hdf5_dtype_for_type<FT>());
 
   for (int i = 0; i < N; ++i) {
