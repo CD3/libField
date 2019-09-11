@@ -277,4 +277,25 @@ hdf5read("Tvst.h5", T2);
 
 ```
 
+Functions for reading and writing to specific paths in file are also provided.
 
+```C++
+#include<libField/Field.hpp>
+#include<libField/HDF5.hpp>
+...
+Field<double,2> T(10,20);
+T.setCoordinateSystem(Uniform(0,2), Uniform(0,4));
+T.set_f( [](auto x){ return x[0]*x[0] + x[1]*x[1]; };
+
+// save field to disk
+hdf5write("Tvst.h5", "/path/to/group", T);
+
+...
+
+// load saved into another field
+// note that the data types do not have to match.
+// HDF5 will take care of the conversion.
+Field<double,2> T2;
+hdf5read("Tvst.h5", "/path/to/group", T2);
+
+```
