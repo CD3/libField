@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include <libField/Field.hpp>
+#include <libField/HDF5.hpp>
 
 TEST_CASE("Tutorial : 2D Temperature", "[tutorial]")
 {

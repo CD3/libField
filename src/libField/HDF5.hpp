@@ -17,17 +17,17 @@ const H5::PredType& get_hdf5_dtype_for_type()
 };
 
 template <>
-const H5::PredType& get_hdf5_dtype_for_type<long double>()
+inline const H5::PredType& get_hdf5_dtype_for_type<long double>()
 {
   return H5::PredType::NATIVE_LDOUBLE;
 };
 template <>
-const H5::PredType& get_hdf5_dtype_for_type<double>()
+inline const H5::PredType& get_hdf5_dtype_for_type<double>()
 {
   return H5::PredType::NATIVE_DOUBLE;
 };
 template <>
-const H5::PredType& get_hdf5_dtype_for_type<float>()
+inline const H5::PredType& get_hdf5_dtype_for_type<float>()
 {
   return H5::PredType::NATIVE_FLOAT;
 };
