@@ -12,6 +12,13 @@ then
   exit 1
 fi
 
+if [[ -n $(git status --porcelain) ]]
+then
+  echo "ERROR: working directory is not clean"
+  echo "please clean or stash your changes."
+  exit 1
+fi
+
 function exit_on_error()
 {
   echo "There was an error. Commit will not be tagged."
@@ -26,9 +33,11 @@ echo "cd'ing to root directory ($root)"
 cd $root
 
 echo "looking for pre-tag-release.sh to run"
-$(find ./ -name 'pre-tag-release.sh')
+script=$(find ./ -path ./externals -prune -o -name 'pre-tag-release.sh' -print)
+[[ $script != "" ]] && echo "Found: $script" && $script
+[[ $script != "" ]] || echo "Did NOT find a script to run."
 
 echo "tagging with ${tag}"
-git tag ${tag}
+git tag --annotate ${tag}
 git tag | grep ${tag}
 echo "Successfully tagged commit."
