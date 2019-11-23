@@ -90,10 +90,19 @@ install(EXPORT ${PROJECT_NAME}Targets
   FILE ${PROJECT_NAME}Targets.cmake
   NAMESPACE ${PROJECT_NAME}::
   DESTINATION cmake)
+
+# we need to conditionally add hdf5 dependency
+# if hdf5::hdf5_cpp-static target exists, then libField
+# will link against it and the user needs to have it installed.
+if(TARGET hdf5::hdf5_cpp-static)
+set( HDF5_DEP "find_dependency(hdf5)")
+elseif()
+set( HDF5_DEP "")
+endif()
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
   "include(CMakeFindDependencyMacro)
   find_dependency(Boost)
-  find_dependency(hdf5)
+  ${HDF5_DEP}
   include(\${CMAKE_CURRENT_LIST_DIR}/${PROJECT_NAME}Targets.cmake)
   ")
   include(CMakePackageConfigHelpers)
