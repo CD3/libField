@@ -127,7 +127,7 @@ TEST_CASE("CoordinateSystem Range Setting")
 {
   CoordinateSystem<double, 3> Coordinates(10, 10, 10);
 
-  Coordinates.set(Uniform(1, 10), Geometric(0., 1, 2), Geometric(1, 0.1, 1.1));
+  Coordinates.set(Uniform(1, 10), Geometric(0., 1., 2), Geometric(1., 0.1, 1.1));
 
   for (int i = 0; i < 10; i++)
     CHECK(Coordinates.getAxis(0)[i] == Approx(1 + i));

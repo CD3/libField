@@ -31,8 +31,8 @@ class UniformImp
 };
 
 // using a factory function here so that argument types can be deduced.
-template<typename T, typename V>
-UniformImp<T> Uniform(T min, V max)
+template<typename T>
+UniformImp<T> Uniform(T min, T max)
 {
   return UniformImp<T>(min, max);
 }
@@ -61,12 +61,13 @@ class GeometricImp
   }
 
  protected:
-  T min, dx, stretch;
+  T min, dx;
+  double stretch;
 };
 
 // using a factory function here so that argument types can be deduced.
-template<typename T, typename V, typename U>
-GeometricImp<T> Geometric(T min, V dx, U stretch)
+template<typename T, typename S>
+GeometricImp<T> Geometric(T min, T dx, S stretch)
 {
   return GeometricImp<T>(min, dx, stretch);
 }
