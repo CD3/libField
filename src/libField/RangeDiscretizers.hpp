@@ -46,6 +46,7 @@ class GeometricImp
     this->min     = min;
     this->dx      = dx;
     this->stretch = stretch;
+    assert(stretch > 1);
   }
 
   auto operator()(size_t i, size_t N) const
