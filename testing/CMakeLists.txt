@@ -7,6 +7,8 @@ if(BUILD_UNIT_TESTS)
   set(binDir ${CMAKE_BINARY_DIR}/testBin)
   set(buildDir ${CMAKE_BINARY_DIR})
 
+  find_package(OpenMP)
+
   # Find all sources.
   file(GLOB_RECURSE unitTest_SOURCES
     RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
@@ -26,6 +28,9 @@ if(BUILD_UNIT_TESTS)
     target_compile_options(${testName} PRIVATE -Wall -Wextra -Wno-unknown-pragmas -Wno-unused-parameter -pedantic -Werror)
   endif()
   target_link_libraries(${testName} Field)
+  if(OpenMP_CXX_FOUND)
+    target_link_libraries(${testName} OpenMP::OpenMP_CXX)
+  endif()
   target_include_directories(${testName}
     PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
   set_target_properties(${testName}
@@ -34,7 +39,5 @@ if(BUILD_UNIT_TESTS)
   add_test(NAME ${testName}
     WORKING_DIRECTORY ${buildDir}
     COMMAND ${binDir}/${testName})
-
-  file(COPY data DESTINATION ${buildDir})
 
 endif()
