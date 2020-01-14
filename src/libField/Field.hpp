@@ -5,6 +5,7 @@
 #include <type_traits>
 #include <typeinfo>
 #include <vector>
+#include <array>
 
 #include <boost/multi_array.hpp>
 
