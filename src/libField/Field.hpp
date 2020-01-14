@@ -46,8 +46,8 @@ class Field
 
     std::array<size_t, NUMDIMS> ind;
     int                         NN = shape[0];
-    for (int j = 1; j < NUMDIMS; ++j) NN *= shape[j];
-    for (int j = 0; j < NUMDIMS; ++j) {
+    for (size_t j = 1; j < NUMDIMS; ++j) NN *= shape[j];
+    for (size_t j = 0; j < NUMDIMS; ++j) {
       NN /= shape[j];
       ind[j] = i / NN;
       i -= ind[j] * NN;
@@ -102,7 +102,7 @@ class Field
     cs = cs_;
 
     std::vector<size_t> sizes(NUMDIMS);
-    for (int i = 0; i < NUMDIMS; ++i) sizes[i] = cs->size(i);
+    for (size_t i = 0; i < NUMDIMS; ++i) sizes[i] = cs->size(i);
 
     d.reset(new array_type(sizes));
   }
@@ -151,7 +151,7 @@ class Field
   auto operator[](I i) const
   {
     return (*d)[i];
-  };
+  }
 
   // coord system access
   auto        getCoordinateSystemPtr() { return cs; };
@@ -243,7 +243,7 @@ class Field
   {
     auto N = d->num_elements();
 #pragma omp parallel for
-    for (int i = 0; i < N; ++i) {
+    for (size_t i = 0; i < N; ++i) {
       auto ind             = this->_1d2nd(i);
       d->  operator()(ind) = f(cs->getCoord(ind));
     }
@@ -269,7 +269,7 @@ class Field
   {
     auto N = d->num_elements();
 #pragma omp parallel for
-    for (int i = 0; i < N; ++i) {
+    for (size_t i = 0; i < N; ++i) {
       auto ind = this->_1d2nd(i);
       auto val = f(cs->getCoord(ind));
       if (val) d->operator()(ind) = val.value();
@@ -294,7 +294,7 @@ class Field
   {
     auto N = d->num_elements();
 #pragma omp parallel for
-    for (int i = 0; i < N; ++i) {
+    for (size_t i = 0; i < N; ++i) {
       auto ind             = this->_1d2nd(i);
       d->  operator()(ind) = f(ind, cs);
     }
@@ -320,7 +320,7 @@ class Field
   {
     auto N = d->num_elements();
 #pragma omp parallel for
-    for (int i = 0; i < N; ++i) {
+    for (size_t i = 0; i < N; ++i) {
       auto ind = this->_1d2nd(i);
       auto val = f(ind, cs);
       if (val) d->operator()(ind) = val.value();
@@ -337,7 +337,7 @@ class Field
   {
     auto N = d->num_elements();
 #pragma omp parallel for
-    for (int i = 0; i < N; ++i) {
+    for (size_t i = 0; i < N; ++i) {
       auto ind             = this->_1d2nd(i);
       d->  operator()(ind) = std::move(q);
     }
@@ -349,13 +349,13 @@ class Field
   {
     auto N        = F.d->num_elements();
     auto last_ind = F._1d2nd(0);
-    for (int i = 0; i < N; ++i) {
+    for (size_t i = 0; i < N; ++i) {
       auto ind = F._1d2nd(i);
       // we want to print out blank lines whenever an index gets reset
-      for (int j = 0; j < NUMDIMS; ++j)
+      for (size_t j = 0; j < NUMDIMS; ++j)
         if (ind[j] < last_ind[j]) output << "\n";
 
-      for (int j = 0; j < NUMDIMS; ++j)
+      for (size_t j = 0; j < NUMDIMS; ++j)
         output << F.cs->getAxis(j)[ind[j]] << " ";
       output << F.d->operator()(ind) << "\n";
 
@@ -369,7 +369,7 @@ class Field
   {
     auto N = d->num_elements();
 #pragma omp parallel for
-    for (int i = 0; i < N; ++i) {
+    for (size_t i = 0; i < N; ++i) {
       auto ind             = this->_1d2nd(i);
       d->  operator()(ind) = q;
     }
@@ -381,7 +381,7 @@ class Field
   {
     auto N = d->num_elements();
 #pragma omp parallel for
-    for (int i = 0; i < N; ++i) {
+    for (size_t i = 0; i < N; ++i) {
       auto ind = this->_1d2nd(i);
       d->  operator()(ind) += q;
     }
@@ -393,7 +393,7 @@ class Field
   {
     auto N = d->num_elements();
 #pragma omp parallel for
-    for (int i = 0; i < N; ++i) {
+    for (size_t i = 0; i < N; ++i) {
       auto ind = this->_1d2nd(i);
       d->  operator()(ind) -= q;
     }
@@ -405,7 +405,7 @@ class Field
   {
     auto N = d->num_elements();
 #pragma omp parallel for
-    for (int i = 0; i < N; ++i) {
+    for (size_t i = 0; i < N; ++i) {
       auto ind = this->_1d2nd(i);
       d->  operator()(ind) *= q;
     }
@@ -417,7 +417,7 @@ class Field
   {
     auto N = d->num_elements();
 #pragma omp parallel for
-    for (int i = 0; i < N; ++i) {
+    for (size_t i = 0; i < N; ++i) {
       auto ind = this->_1d2nd(i);
       d->  operator()(ind) /= q;
     }
@@ -436,7 +436,7 @@ class Field
     BOOST_ASSERT(f.size() == this->size());
     auto N = d->num_elements();
 #pragma omp parallel for
-    for (int i = 0; i < N; ++i) {
+    for (size_t i = 0; i < N; ++i) {
       auto ind = this->_1d2nd(i);
       d->  operator()(ind) += f(ind);
     }
@@ -448,7 +448,7 @@ class Field
     BOOST_ASSERT(f.size() == this->size());
     auto N = d->num_elements();
 #pragma omp parallel for
-    for (int i = 0; i < N; ++i) {
+    for (size_t i = 0; i < N; ++i) {
       auto ind = this->_1d2nd(i);
       d->  operator()(ind) -= f(ind);
     }
@@ -460,7 +460,7 @@ class Field
     BOOST_ASSERT(f.size() == this->size());
     auto N = d->num_elements();
 #pragma omp parallel for
-    for (int i = 0; i < N; ++i) {
+    for (size_t i = 0; i < N; ++i) {
       auto ind = this->_1d2nd(i);
       d->  operator()(ind) *= f(ind);
     }
@@ -472,7 +472,7 @@ class Field
     BOOST_ASSERT(f.size() == this->size());
     auto N = d->num_elements();
 #pragma omp parallel for
-    for (int i = 0; i < N; ++i) {
+    for (size_t i = 0; i < N; ++i) {
       auto ind = this->_1d2nd(i);
       d->  operator()(ind) /= f(ind);
     }

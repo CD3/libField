@@ -43,7 +43,7 @@ class ArrayEqual : public Catch::MatcherBase<ARRAY>
   {
     if (a_.size() != a.size()) return false;
 
-    for (int i = 0; i < a_.size(); i++) {
+    for (size_t i = 0; i < a_.size(); i++) {
       if (a[i] != a_[i]) {
         return false;
       }
@@ -60,7 +60,7 @@ class ArrayEqual : public Catch::MatcherBase<ARRAY>
   {
     std::ostringstream ss;
     ss << "is same as {";
-    for (int i = 0; i < a.size(); i++) ss << a[i] << ", ";
+    for (size_t i = 0; i < a.size(); i++) ss << a[i] << ", ";
     ss << "}";
     return ss.str();
   }

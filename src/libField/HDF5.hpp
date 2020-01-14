@@ -14,23 +14,23 @@ const H5::PredType& get_hdf5_dtype_for_type()
       "called the function with an unsupported data type. Please provide a "
       "template specialization for your data type that returns the correct "
       "hdf5 datatype.");
-};
+}
 
 template <>
 inline const H5::PredType& get_hdf5_dtype_for_type<long double>()
 {
   return H5::PredType::NATIVE_LDOUBLE;
-};
+}
 template <>
 inline const H5::PredType& get_hdf5_dtype_for_type<double>()
 {
   return H5::PredType::NATIVE_DOUBLE;
-};
+}
 template <>
 inline const H5::PredType& get_hdf5_dtype_for_type<float>()
 {
   return H5::PredType::NATIVE_FLOAT;
-};
+}
 
 template<typename CT>
 bool path_exists( const CT& container, std::string group )
@@ -60,11 +60,11 @@ auto hdf5write(ST& container, const Field<FT, N, CT>& f) -> decltype(container.c
 {
 
   hsize_t dims[N];
-  for (int i = 0; i < N; ++i) {
+  for (size_t i = 0; i < N; ++i) {
     dims[i] = f.size(i);
   }
 
-  for (int i = 0; i < N; ++i) {
+  for (size_t i = 0; i < N; ++i) {
     H5::DataSpace dspace(1, &dims[i]);
     auto dset = container.createDataSet(("axis " + std::to_string(i)).c_str(),
                                    detail::get_hdf5_dtype_for_type<CT>(), dspace);
@@ -165,16 +165,16 @@ void hdf5read(H5::DataSet& dset, Field<FT, N, CT>& f)
   dspace.getSimpleExtentDims(ddims);
 
   std::array<size_t, N> dims;
-  for (int i = 0; i < N; ++i) dims[i] = ddims[i];
+  for (size_t i = 0; i < N; ++i) dims[i] = ddims[i];
 
   f = Field<FT, N, CT>(dims);
 
   dset.read(f.data(), detail::get_hdf5_dtype_for_type<FT>());
 
   // set all coordinates to indices
-  for(int n = 0; n < N; ++n)
+  for(size_t n = 0; n < N; ++n)
   {
-    for(int i = 0; i < f.size(n); ++i)
+    for(size_t i = 0; i < f.size(n); ++i)
     {
       f.getAxis(n)[i] = i;
     }
@@ -203,13 +203,13 @@ auto hdf5read(ST& container, Field<FT, N, CT>& f) -> decltype(container.createGr
   dspace.getSimpleExtentDims(ddims);
 
   std::array<size_t, N> dims;
-  for (int i = 0; i < N; ++i) dims[i] = ddims[i];
+  for (size_t i = 0; i < N; ++i) dims[i] = ddims[i];
 
   f = Field<FT, N, CT>(dims);
 
   dset.read(f.data(), detail::get_hdf5_dtype_for_type<FT>());
 
-  for (int i = 0; i < N; ++i) {
+  for (size_t i = 0; i < N; ++i) {
     std::string dsetname{"axis " + std::to_string(i)};
     auto dset = container.openDataSet(dsetname.c_str());
     auto dspace = dset.getSpace();

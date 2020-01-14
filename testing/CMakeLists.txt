@@ -20,6 +20,11 @@ if(BUILD_UNIT_TESTS)
   add_executable(${testName} ${unitTest_SOURCES})
 
   target_compile_definitions(${testName} PRIVATE -DTESTING)
+  if(MSVC)
+    target_compile_options(${testName} PRIVATE /W4 /WX)
+  else()
+    target_compile_options(${testName} PRIVATE -Wall -Wextra -Wno-unknown-pragmas -Wno-unused-parameter -pedantic -Werror)
+  endif()
   target_link_libraries(${testName} Field)
   target_include_directories(${testName}
     PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")

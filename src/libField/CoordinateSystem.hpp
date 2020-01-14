@@ -62,14 +62,14 @@ class CoordinateSystem
   template<typename I>
   CoordinateSystem(std::array<I, NUMDIMS> sizes)
   {
-    for (int i = 0; i < NUMDIMS; i++)
+    for (size_t i = 0; i < NUMDIMS; i++)
       axes[i].reset(new axis_type(boost::extents[sizes[i]]));
   }
 
   CoordinateSystem(const std::array<std::shared_ptr<axis_type>, NUMDIMS>& axes_)
   {
     // we need to deep copy the axes, not just the shared pointer to them.
-    for (int i = 0; i < NUMDIMS; i++) axes[i].reset(new axis_type(*axes_[i]));
+    for (size_t i = 0; i < NUMDIMS; i++) axes[i].reset(new axis_type(*axes_[i]));
   }
 
   ~CoordinateSystem() = default;
@@ -85,7 +85,7 @@ class CoordinateSystem
     }
 
     // NUMDIMS is unsigned, so this will eval to true if i is negative
-    if (i >= NUMDIMS) return 0ul;
+    if (i >= static_cast<int>(NUMDIMS)) return 0ul;
 
     return axes[i]->size();
   }
@@ -99,7 +99,7 @@ class CoordinateSystem
   auto set(Args... args)
   {
     set_imp<0>(args...);
-  };
+  }
 
   /** Return i'th axis */
   const auto& operator[](size_t i) const { return *axes[i]; }
@@ -139,7 +139,7 @@ class CoordinateSystem
   auto getCoord(I ind) const
   {
     std::array<COORD, NUMDIMS> c;
-    for (int i = 0; i < NUMDIMS; ++i) c[i] = axes[i]->operator[](ind[i]);
+    for (size_t i = 0; i < NUMDIMS; ++i) c[i] = axes[i]->operator[](ind[i]);
     return c;
   }
 
@@ -171,7 +171,7 @@ class CoordinateSystem
     std::array<std::shared_ptr<view1D<COORD> >, NDims> new_axes;
     int                                                ii = 0;
     // loop through each axis
-    for (int i = 0; i < NUMDIMS; i++) {
+    for (size_t i = 0; i < NUMDIMS; i++) {
       // skip degenerate axes
       if (!ind.ranges_[i].degenerate_) {
         new_axes[ii].reset(new view1D<COORD>(axes[i]->operator[](
@@ -195,9 +195,9 @@ class CoordinateSystem
     // create an array of axis views that will be used to construct the new
     // coordinate system.
     std::array<std::shared_ptr<view1D<COORD> >, NDims> new_axes;
-    int                                                ii = 0;
+    size_t                                             ii = 0;
     // loop through each axis
-    for (int i = 0; i < NUMDIMS; i++) {
+    for (size_t i = 0; i < NUMDIMS; i++) {
       // skip degenerate axes
       if (!ind.ranges_[i].degenerate_) {
         new_axes[ii].reset(new view1D<COORD>(axes[i]->operator[](
@@ -265,7 +265,7 @@ class CoordinateSystem
   set_imp(R range, Args... args)
   {
     size_t N = axes[II]->size();
-    for (int i = 0; i < N; ++i) axes[II]->operator[](i) = range(i, N);
+    for (size_t i = 0; i < N; ++i) axes[II]->operator[](i) = range(i, N);
 
     set_imp<II + 1>(args...);
   }
@@ -284,7 +284,7 @@ class CoordinateSystem
                             "CoordinateSystem<COORD,NUMDIMS> "
                             "set method called with wrong "
                             "number of arguments.");
-  };
+  }
 
   template<int II, typename C, typename I, typename... Args>
   void getCoord_imp(C& c, I i, Args... args) const

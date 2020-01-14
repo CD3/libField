@@ -57,7 +57,8 @@ class GeometricImp
     // x[3] = xmin + dx + s*dx + s*s*dx
     // x[i] = xmin + dx*\sigma s^(i-1)
     // which is the geometric series.
-
+    if(i >= N)
+      i = N-1;
     return min + 1. * dx * (1 - pow(1. * stretch, i)) / (1 - stretch);
   }
 

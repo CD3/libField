@@ -45,13 +45,13 @@ template<size_t N>
 struct IsIndexCont<std::array<size_t, N>> : std::true_type {
 };
 
-// trait querries
+// trait queries
 
 template<template<typename, size_t> class ARRAY, typename T, size_t N>
 constexpr int getNumDims(ARRAY<T, N>& a)
 {
   return N;
-};
+}
 
 template<class F, class... Args>
 struct IsCallable {

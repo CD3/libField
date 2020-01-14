@@ -16,8 +16,8 @@ TEST_CASE("Tutorial : 2D Temperature", "[tutorial]")
 
   // std::cout << T << std::endl;
 
-  for (int i = 0; i < T.size(0); ++i) {
-    for (int j = 0; j < T.size(1); j++) {
+  for (size_t i = 0; i < T.size(0); ++i) {
+    for (size_t j = 0; j < T.size(1); j++) {
       auto x  = T.getCoord(i, j);
       T(i, j) = exp(2 * (x[0] * x[0] + (x[1] - 5) * (x[1] - 5)));
     }
