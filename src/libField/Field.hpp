@@ -88,15 +88,15 @@ class Field
   template<typename... Args>
   void reset(Args... args)
   {
-    cs.reset(new cs_type(args...));
+    cs = std::make_shared<cs_type>(args...);
     std::array<int, NUMDIMS> sizes({args...});
-    d.reset(new array_type(sizes));
+    d = std::make_shared<array_type>(sizes);
   }
   template<typename I>
   void reset(std::array<I, NUMDIMS> sizes)
   {
-    cs.reset(new cs_type(sizes));
-    d.reset(new array_type(sizes));
+    cs = std::make_shared<cs_type>(sizes);
+    d = std::make_shared<array_type>(sizes);
   }
   void reset(std::shared_ptr<cs_type> cs_)
   {
@@ -105,13 +105,13 @@ class Field
     std::vector<size_t> sizes(NUMDIMS);
     for (size_t i = 0; i < NUMDIMS; ++i) sizes[i] = cs->size(i);
 
-    d.reset(new array_type(sizes));
+    d = std::make_shared<array_type>(sizes);
   }
 
   void reset(cs_type& cs_, array_type& d_)
   {
-    d.reset(new array_type(d_));
-    cs.reset(new cs_type(cs_.getAxes()));
+    d = std::make_shared<array_type>(d_);
+    cs = std::make_shared<cs_type>(cs_.getAxes());
   };
 
   ~Field() = default;

@@ -63,13 +63,15 @@ class CoordinateSystem
   CoordinateSystem(std::array<I, NUMDIMS> sizes)
   {
     for (size_t i = 0; i < NUMDIMS; i++)
-      axes[i].reset(new axis_type(boost::extents[sizes[i]]));
+      axes[i] = std::make_shared<axis_type>(boost::extents[sizes[i]]);
   }
 
   CoordinateSystem(const std::array<std::shared_ptr<axis_type>, NUMDIMS>& axes_)
   {
     // we need to deep copy the axes, not just the shared pointer to them.
-    for (size_t i = 0; i < NUMDIMS; i++) axes[i].reset(new axis_type(*axes_[i]));
+    for (size_t i = 0; i < NUMDIMS; i++){
+      axes[i] = std::make_shared<axis_type>(*axes_[i]);
+    }
   }
 
   ~CoordinateSystem() = default;
@@ -174,9 +176,9 @@ class CoordinateSystem
     for (size_t i = 0; i < NUMDIMS; i++) {
       // skip degenerate axes
       if (!ind.ranges_[i].degenerate_) {
-        new_axes[ii].reset(new view1D<COORD>(axes[i]->operator[](
+        new_axes[ii] = std::shared_ptr<view1D<COORD>>(axes[i]->operator[](
             indices[IRange(ind.ranges_[i].start_, ind.ranges_[i].finish_,
-                           ind.ranges_[i].stride_)])));
+                           ind.ranges_[i].stride_)]));
         ii++;
       }
     }
@@ -200,9 +202,9 @@ class CoordinateSystem
     for (size_t i = 0; i < NUMDIMS; i++) {
       // skip degenerate axes
       if (!ind.ranges_[i].degenerate_) {
-        new_axes[ii].reset(new view1D<COORD>(axes[i]->operator[](
+        new_axes[ii] = std::make_shared<view1D<COORD>>(axes[i]->operator[](
             indices[IRange(ind.ranges_[i].start_, ind.ranges_[i].finish_,
-                           ind.ranges_[i].stride_)])));
+                           ind.ranges_[i].stride_)]));
         ii++;
       }
     }
@@ -240,7 +242,7 @@ class CoordinateSystem
   typename std::enable_if<std::is_integral<N>::value, void>::type init_imp(
       N n, Args... args)
   {
-    axes[II].reset(new axis_type(boost::extents[n]));
+    axes[II] = std::make_shared<axis_type>(boost::extents[n]);
     init_imp<II + 1>(args...);
   }
 

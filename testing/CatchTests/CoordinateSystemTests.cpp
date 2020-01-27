@@ -75,7 +75,7 @@ TEST_CASE("CoordinateSystem Usage")
   int                                            NNx = 20;
   int                                            NNy = 5;
   int                                            NNz = Ny;
-  std::shared_ptr<axis_type>                     x(new axis_type(extents[NNx]));
+  std::shared_ptr<axis_type>                     x = std::make_shared<axis_type>(extents[NNx]);
   for (int i = 0; i < NNx; i++) {
     x->operator[](i) = 2 * i;
   }
