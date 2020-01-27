@@ -49,9 +49,13 @@ class CoordinateSystem
 
 #endif
 
+  // make sure compiler generates all of the special member functions we need.
   CoordinateSystem()                        = default;
   CoordinateSystem(const CoordinateSystem&) = default;
   CoordinateSystem(CoordinateSystem&&)      = default;
+  ~CoordinateSystem() = default;
+  CoordinateSystem& operator=(CoordinateSystem& rhs) = default;
+  CoordinateSystem& operator=(CoordinateSystem&& rhs) = default;
 
   template<typename... Args>
   CoordinateSystem(Args... args)
@@ -74,7 +78,6 @@ class CoordinateSystem
     }
   }
 
-  ~CoordinateSystem() = default;
 
   /** Returns size of the i'th axis. */
   auto size(int i) const

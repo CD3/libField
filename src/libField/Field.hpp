@@ -68,6 +68,7 @@ class Field
 
   Field()        = default;
   Field(Field&&) = default;
+  ~Field() = default;
 
   Field(const Field& f) { reset(*f.cs, *f.d); }
 
@@ -114,7 +115,6 @@ class Field
     cs = std::make_shared<cs_type>(cs_.getAxes());
   };
 
-  ~Field() = default;
 
   // ELEMENT ACCESS
 
