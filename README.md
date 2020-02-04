@@ -183,7 +183,7 @@ for(int i = 0; i < T.size(0); i++)
   for(int j = 0; j < T.size(1); j++)
   {
     auto x = T.getCoord(i,j); // this returns a 2-element array with the x and y coordinates
-    T(i,j) = exp
+    T(i,j) = exp( 2*x[0]*x[0]) * exp(2*(x[1]-5)*(x[1]-5))
   }
 }
 ```
