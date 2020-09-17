@@ -12,7 +12,8 @@ trap cleanup EXIT
 
 mkdir ${bindir}
 cd ${bindir}
-cmake .. -DCMAKE_INSTALL_PREFIX=${bindir}/install -DCMAKE_BUILD_TYPE=Release
+conan install ..
+veval cmake .. -DCMAKE_INSTALL_PREFIX=${bindir}/install -DCMAKE_BUILD_TYPE=Release
 cmake --build .
 cmake --build . --target test
 
@@ -56,7 +57,8 @@ EOF
 
 mkdir build1
 cd build1
-cmake .. -DlibField_DIR=${bindir}/install/cmake/libField
+conan install ${srcdir}
+veval cmake .. -DlibField_DIR=${bindir}/install/cmake/libField
 cmake --build .
 ./main
 
@@ -64,7 +66,8 @@ cd ..
 
 mkdir build2
 cd build2
-cmake ..
+conan install ${srcdir}
+veval cmake ..
 cmake --build .
 ./main
 
