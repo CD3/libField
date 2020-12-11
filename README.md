@@ -299,3 +299,7 @@ Field<double,2> T2;
 hdf5read("Tvst.h5", "/path/to/group", T2);
 
 ```
+
+# Reference
+
+See the [reference documentation](./doc/reference/html/index.html) for more details.

@@ -68,6 +68,7 @@ target_link_libraries( ${LIB_NAME} INTERFACE $<$<TARGET_EXISTS:hdf5::hdf5_cpp-st
 
 if(STANDALONE)
   add_subdirectory(testing)
+  add_subdirectory(doc)
 endif()
 
 install(TARGETS ${LIB_NAME}
