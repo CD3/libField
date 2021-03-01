@@ -1,5 +1,5 @@
 .*.swp
 *.o
 int
-build
+build*
 .clangd/

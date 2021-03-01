@@ -9,11 +9,12 @@ namespace detail {
 template <typename T>
 const H5::PredType& get_hdf5_dtype_for_type()
 {
-  throw std::runtime_error(
+  static_assert( sizeof(T)+1 == 0,
       "This function should never be called. If you are seeing this, then you "
       "called the function with an unsupported data type. Please provide a "
       "template specialization for your data type that returns the correct "
       "hdf5 datatype.");
+  throw std::runtime_error("Return statement is not required if we throw here.");
 }
 
 template <>
