@@ -133,7 +133,7 @@ class Field
   void reset(Dims... dims)
   {
     cs = std::make_shared<cs_type>(dims...);
-    std::array<int, NUMDIMS> sizes({dims...});
+    std::array<size_t, NUMDIMS> sizes({static_cast<size_t>(dims)...});
     d = std::make_shared<array_type>(sizes);
   }
 

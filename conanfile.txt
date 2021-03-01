@@ -3,3 +3,4 @@ virtualenv
 [requires]
 boost/1.69.0@conan/stable
 hdf5/1.10.5@cd3/devel
+gp-utils/0.1@cd3/devel

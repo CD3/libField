@@ -402,7 +402,7 @@ TEST_CASE("Field Semantics")
   }
 }
 
-TEST_CASE("Field Copy vs. Move")
+TEST_CASE("Field Copy vs. Move","[.][benchmarks]")
 {
   Field<double, 3> F1(100, 100, 100);
 

@@ -39,6 +39,12 @@ if( TARGET hdf5::hdf5_cpp-static )
 else()
   message( STATUS "Did not find HDF5 C++ Library" )
 endif()
+find_package( gputils QUIET )
+if( TARGET gputils::gputils )
+  message( STATUS "Found gp-utils C++ Library" )
+else()
+  message( STATUS "Did not find gp-utils C++ Library" )
+endif()
 
 
 string(REGEX
@@ -63,8 +69,9 @@ target_compile_definitions(${LIB_NAME}
   INTERFACE
   $<$<BOOL:${SERIALIZATION}>:SERIALIZATION_ENABLED
   BOOST_NO_MEMBER_TEMPLATE_FRIENDS>)
-target_compile_definitions( ${LIB_NAME} INTERFACE $<$<TARGET_EXISTS:hdf5::hdf5_cpp-static>:HAVE_HDF5_CPP> )
-target_link_libraries( ${LIB_NAME} INTERFACE $<$<TARGET_EXISTS:hdf5::hdf5_cpp-static>:hdf5::hdf5_cpp-static> )
+target_compile_definitions( ${LIB_NAME} INTERFACE $<$<TARGET_EXISTS:hdf5::hdf5_cpp-static>:HAVE_HDF5_CPP> $<$<TARGET_EXISTS:gputils::gputils>:HAVE_GPUTILS>)
+target_link_libraries( ${LIB_NAME} INTERFACE $<$<TARGET_EXISTS:hdf5::hdf5_cpp-static>:hdf5::hdf5_cpp-static>
+                                             $<$<TARGET_EXISTS:gputils::gputils>:gputils::gputils> )
 
 if(STANDALONE)
   add_subdirectory(testing)

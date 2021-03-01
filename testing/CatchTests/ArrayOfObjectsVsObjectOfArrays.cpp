@@ -32,7 +32,7 @@ struct FieldCollection {
   }
 };
 
-TEST_CASE("Array of Objects vs. Object of Arrays")
+TEST_CASE("Array of Objects vs. Object of Arrays","[.][benchmarks]")
 {
   int    Nt = 1000;
   int    Nx = 1000;
