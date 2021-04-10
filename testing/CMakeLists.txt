@@ -8,6 +8,7 @@ if(BUILD_UNIT_TESTS)
   set(buildDir ${CMAKE_BINARY_DIR})
 
   find_package(OpenMP)
+  find_package(libIntegrate)
 
   # Find all sources.
   file(GLOB_RECURSE unitTest_SOURCES
@@ -27,7 +28,13 @@ if(BUILD_UNIT_TESTS)
   else()
     target_compile_options(${testName} PRIVATE -Wall -Wextra -Wno-unknown-pragmas -Wno-unused-parameter -pedantic -Werror)
   endif()
-  target_link_libraries(${testName} Field)
+
+  target_link_libraries(${testName} Field )
+  if(TARGET libIntegrate::Integrate)
+    target_compile_definitions(${testName} PRIVATE HAVE_LIBINTEGRATE)
+    target_link_libraries(${testName} libIntegrate::Integrate)
+  endif()
+  target_link_libraries(${testName} Field )
   if(OpenMP_CXX_FOUND)
     target_link_libraries(${testName} OpenMP::OpenMP_CXX)
   endif()
