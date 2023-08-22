@@ -1,5 +1,6 @@
 #ifndef RangeDiscretizers_hpp
 #define RangeDiscretizers_hpp
+#include <cmath>
 
 /** @file RangeDiscretizers.hpp
  * @brief
@@ -58,12 +59,12 @@ class GeometricImp
     // x[i] = xmin + dx*\sigma s^(i-1)
     // which is the geometric series.
     if(i >= N)
-      i = N-1;
-    return min + 1. * dx * (1 - pow(1. * stretch, i)) / (1 - stretch);
+      i = N - 1;
+    return min + 1. * dx * (1 - std::pow(1. * stretch, i)) / (1 - stretch);
   }
 
  protected:
-  T min, dx;
+  T      min, dx;
   double stretch;
 };
 
@@ -74,8 +75,6 @@ GeometricImp<T> Geometric(T min, T dx, S stretch)
   return GeometricImp<T>(min, dx, stretch);
 }
 
-
-
 template<typename T>
 class GeometricWithPeriodImp
 {
@@ -85,8 +84,8 @@ class GeometricWithPeriodImp
     this->min     = min;
     this->dx      = dx;
     this->stretch = stretch;
-    this->period = period;
-    this->Np = 1+log( 1 - (this->period/this->dx)*(1 - stretch) )/log(stretch); // the number of points that can fit inside one period
+    this->period  = period;
+    this->Np      = 1 + log(1 - (this->period / this->dx) * (1 - stretch)) / log(stretch);  // the number of points that can fit inside one period
     assert(stretch > 1);
   }
 
@@ -100,21 +99,21 @@ class GeometricWithPeriodImp
     // which is the geometric series.
     // determine the maximum i value of the period of the function
     // which makes it periodic
-    
-    if(i >= N){
-      i = N-1;
-    }
-    
-    size_t n = i / Np; // number of periods that have passed
-    size_t j = i % Np; // number of steps past last period
 
-    auto Dx =  n*this->period;
-    Dx += 1. * dx * (1 - pow(1. * stretch, j)) / (1 - stretch);
-    return 1.*min + Dx;
+    if(i >= N) {
+      i = N - 1;
+    }
+
+    size_t n = i / Np;  // number of periods that have passed
+    size_t j = i % Np;  // number of steps past last period
+
+    auto Dx = n * this->period;
+    Dx += 1. * dx * (1 - std::pow(1. * stretch, j)) / (1 - stretch);
+    return 1. * min + Dx;
   }
 
  protected:
-  T min, dx, period;
+  T      min, dx, period;
   size_t Np;
   double stretch;
 };
@@ -126,14 +125,11 @@ GeometricWithPeriodImp<T> GeometricWithPeriod(T min, T dx, S stretch, T period)
   return GeometricWithPeriodImp<T>(min, dx, stretch, period);
 }
 
-
 }  // namespace range_discretizers
-
-
 
 // pull functions into global namespace
 using range_discretizers::Geometric;
-using range_discretizers::Uniform;
 using range_discretizers::GeometricWithPeriod;
+using range_discretizers::Uniform;
 
 #endif  // include protector
