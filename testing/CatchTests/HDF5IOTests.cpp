@@ -1,8 +1,7 @@
-#define CATCH_CONFIG_ENABLE_BENCHMARKING
 #ifdef HAVE_HDF5_CPP
-#include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_approx.hpp>
-
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_string.hpp>
 #include <libField/Field.hpp>
 #include <libField/HDF5.hpp>
 
@@ -137,11 +136,11 @@ TEST_CASE("HDF5 Read and Write")
     file.close();
 
     {
-      Field<double, 1> G;
-      H5::H5File file("ManyFields.h5", H5F_ACC_RDONLY);
+      Field<double, 1>         G;
+      H5::H5File               file("ManyFields.h5", H5F_ACC_RDONLY);
       std::vector<std::string> path;
       path.push_back("Field 1");
-      hdf5read( file, path, G);
+      hdf5read(file, path, G);
 
       CHECK(G.size() == 10);
       CHECK(G(0) == 0);
@@ -150,13 +149,13 @@ TEST_CASE("HDF5 Read and Write")
     }
 
     {
-      Field<double, 1> G;
-      H5::H5File file("ManyFields.h5", H5F_ACC_RDONLY);
+      Field<double, 1>         G;
+      H5::H5File               file("ManyFields.h5", H5F_ACC_RDONLY);
       std::vector<std::string> path(3);
       path[0] = "Experiment 1";
       path[1] = "Data 1";
       path[2] = "Trial 1";
-      hdf5read( file, path, G);
+      hdf5read(file, path, G);
 
       CHECK(G.size() == 10);
       CHECK(G(0) == 0);
@@ -166,8 +165,8 @@ TEST_CASE("HDF5 Read and Write")
 
     {
       Field<double, 1> G;
-      H5::H5File file("ManyFields.h5", H5F_ACC_RDONLY);
-      hdf5read( file, "/Experiment 1/Data 1/Trial 1", G);
+      H5::H5File       file("ManyFields.h5", H5F_ACC_RDONLY);
+      hdf5read(file, "/Experiment 1/Data 1/Trial 1", G);
 
       CHECK(G.size() == 10);
       CHECK(G(0) == 0);
@@ -177,7 +176,7 @@ TEST_CASE("HDF5 Read and Write")
 
     {
       Field<double, 1> G;
-      hdf5read( "ManyFields.h5", "Experiment 1/Data 1/Trial 1/", G);
+      hdf5read("ManyFields.h5", "Experiment 1/Data 1/Trial 1/", G);
 
       CHECK(G.size() == 10);
       CHECK(G(0) == 0);
@@ -194,35 +193,35 @@ TEST_CASE("HDF5 Read and Write")
 
       {
         double data[3][5];
-        for (int i = 0; i < 3; ++i)
-          for (int j = 0; j < 5; ++j) data[i][j] = i + j;
+        for(int i = 0; i < 3; ++i)
+          for(int j = 0; j < 5; ++j) data[i][j] = i + j;
         hsize_t dims[2];
         dims[0] = 3;
         dims[1] = 5;
         H5::DataSpace dspace(2, dims);
         auto          dset = file.createDataSet("Small 2D Array",
-                                       H5::PredType::NATIVE_DOUBLE, dspace);
+                                                H5::PredType::NATIVE_DOUBLE, dspace);
         dset.write(data, H5::PredType::NATIVE_DOUBLE);
         dset.close();
       }
 
       {
         double data[10];
-        for (int i = 0; i < 10; ++i) data[i] = i;
+        for(int i = 0; i < 10; ++i) data[i] = i;
         hsize_t dims[1];
         dims[0] = 10;
         H5::DataSpace dspace(1, dims);
         auto          dset = file.createDataSet("Small 1D Array",
-                                       H5::PredType::NATIVE_DOUBLE, dspace);
+                                                H5::PredType::NATIVE_DOUBLE, dspace);
         dset.write(data, H5::PredType::NATIVE_DOUBLE);
         dset.close();
       }
 
       {
         double data[2][3][4];
-        for (int i = 0; i < 2; ++i)
-          for (int j = 0; j < 3; ++j)
-            for (int k = 0; k < 4; ++k) data[i][j][k] = i + j + k;
+        for(int i = 0; i < 2; ++i)
+          for(int j = 0; j < 3; ++j)
+            for(int k = 0; k < 4; ++k) data[i][j][k] = i + j + k;
         hsize_t dims[3];
         dims[0] = 2;
         dims[1] = 3;
@@ -230,7 +229,7 @@ TEST_CASE("HDF5 Read and Write")
 
         H5::DataSpace dspace(3, dims);
         auto          dset = file.createDataSet("Small 3D Array",
-                                       H5::PredType::NATIVE_DOUBLE, dspace);
+                                                H5::PredType::NATIVE_DOUBLE, dspace);
         dset.write(data, H5::PredType::NATIVE_DOUBLE);
         dset.close();
       }
@@ -335,8 +334,8 @@ TEST_CASE("HDF5 Read and Write")
     {
       auto   group = file.createGroup("Mismatched Axis Size");
       double data[3][5];
-      for (int i = 0; i < 3; ++i)
-        for (int j = 0; j < 5; ++j) data[i][j] = i + j;
+      for(int i = 0; i < 3; ++i)
+        for(int j = 0; j < 5; ++j) data[i][j] = i + j;
       hsize_t dims[2];
       dims[0] = 3;
       dims[1] = 5;
@@ -378,31 +377,31 @@ TEST_CASE("HDF5 Read and Write")
       auto            group = ifile.openGroup("Mismatched Axis Size");
       CHECK_THROWS_WITH(
           hdf5read(group, f),
-          Catch::Equals("Cannot read axis data from 'axis 0'. Size (2) does "
-                        "not match size expected from field data (3)."));
+          Catch::Matchers::Equals("Cannot read axis data from 'axis 0'. Size (2) does "
+                                  "not match size expected from field data (3)."));
     }
   }
 
   SECTION("Writing multiple fields to the same file")
   {
-    Field<double,1> T(10);
-    T.setCoordinateSystem(Uniform(0,2));
-    Field<float,1> U(20);
-    U.setCoordinateSystem(Uniform(0,1));
+    Field<double, 1> T(10);
+    T.setCoordinateSystem(Uniform(0, 2));
+    Field<float, 1> U(20);
+    U.setCoordinateSystem(Uniform(0, 1));
 
-    hdf5write( "MultipleFieldWrite.h5", "1D/Tvst", T, H5F_ACC_TRUNC );
-    hdf5write( "MultipleFieldWrite.h5", "1D/Uvst", U, H5F_ACC_RDWR );
+    hdf5write("MultipleFieldWrite.h5", "1D/Tvst", T, H5F_ACC_TRUNC);
+    hdf5write("MultipleFieldWrite.h5", "1D/Uvst", U, H5F_ACC_RDWR);
 
-    Field<double,2> E(10,10);
-    E.setCoordinateSystem(Uniform(0,2),Uniform(0,3));
-    Field<float,2> F(20,10);
-    F.setCoordinateSystem(Uniform(-1,1),Uniform(0,2));
+    Field<double, 2> E(10, 10);
+    E.setCoordinateSystem(Uniform(0, 2), Uniform(0, 3));
+    Field<float, 2> F(20, 10);
+    F.setCoordinateSystem(Uniform(-1, 1), Uniform(0, 2));
 
-    hdf5write( "MultipleFieldWrite.h5", "2D/Evst", E, H5F_ACC_RDWR );
-    hdf5write( "MultipleFieldWrite.h5", "2D/Fvst", F, H5F_ACC_RDWR );
+    hdf5write("MultipleFieldWrite.h5", "2D/Evst", E, H5F_ACC_RDWR);
+    hdf5write("MultipleFieldWrite.h5", "2D/Fvst", F, H5F_ACC_RDWR);
 
-    Field<double,1> _1DF;
-    Field<float,2> _2DF;
+    Field<double, 1> _1DF;
+    Field<float, 2>  _2DF;
 
     hdf5read("MultipleFieldWrite.h5", "1D/Tvst", _1DF);
     CHECK(_1DF.size() == 10);
@@ -431,7 +430,6 @@ TEST_CASE("HDF5 Read and Write")
     CHECK(_2DF.getAxis(0)[19] == Catch::Approx(1));
     CHECK(_2DF.getAxis(1)[0] == Catch::Approx(0));
     CHECK(_2DF.getAxis(1)[9] == Catch::Approx(2));
-
   }
 }
 #endif

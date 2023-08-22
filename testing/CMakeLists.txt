@@ -1,7 +1,7 @@
 
 find_package(OpenMP)
 find_package(Catch2 REQUIRED)
-#find_package(libIntegrate)
+find_package(HDF5 REQUIRED)
 
 # Find all sources.
 file(GLOB_RECURSE unitTest_SOURCES
@@ -15,24 +15,17 @@ endforeach()
 set(testName ${PROJECT_NAME}_CatchTests)
 add_executable(${testName} ${unitTest_SOURCES})
 
-target_compile_definitions(${testName} PRIVATE -DTESTING)
+target_compile_definitions(${testName} PRIVATE -DTESTING -DHAVE_HDF5_CPP)
 if(MSVC)
   target_compile_options(${testName} PRIVATE /W4 /WX)
 else()
   target_compile_options(${testName} PRIVATE -Wall -Wextra -Wno-unknown-pragmas -Wno-unused-parameter -pedantic -Werror)
 endif()
 
-target_link_libraries(${testName} Field Catch2::Catch2WithMain)
-if(TARGET libIntegrate::Integrate)
-  target_compile_definitions(${testName} PRIVATE HAVE_LIBINTEGRATE)
-  target_link_libraries(${testName} libIntegrate::Integrate)
-endif()
-target_link_libraries(${testName} Field )
+target_link_libraries(${testName} Field Catch2::Catch2WithMain hdf5::hdf5_cpp)
 if(OpenMP_CXX_FOUND)
   target_link_libraries(${testName} OpenMP::OpenMP_CXX)
 endif()
-target_include_directories(${testName}
-  PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 add_test(NAME ${testName}
   WORKING_DIRECTORY ${buildDir}

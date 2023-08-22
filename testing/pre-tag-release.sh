@@ -7,7 +7,7 @@ function cleanup ()
 {
   [[ -d ${bindir} ]] && rm -r ${bindir}
 }
-set -e 
+set -e
 trap cleanup EXIT
 
 mkdir ${bindir}

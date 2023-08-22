@@ -7,6 +7,10 @@ set(libField_VERSION $CACHE{libField_VERSION})
 
 project(libField VERSION ${libField_VERSION})
 
+include(CMakePackageConfigHelpers)
+include(GNUInstallDirs)
+include(CMakePrintHelpers)
+
 
 message(STATUS "libField Version: ${libField_VERSION}")
 
@@ -38,34 +42,50 @@ if(UNIT_TESTS)
   add_subdirectory(testing)
 endif()
 
-# # Specify installation rules for the library headers
-# install(DIRECTORY include/ DESTINATION include)
-#
-# install(TARGETS Field
-#     EXPORT libFieldTargets
-# )
-#
-# install(EXPORT libFieldTargets
-#     FILE libFieldTargets.cmake
-#     NAMESPACE Field::
-#     DESTINATION lib/cmake/Field
-# )
-#
-# include(CMakePackageConfigHelpers)
-# write_basic_package_version_file(
-#     "${CMAKE_CURRENT_BINARY_DIR}/libFieldConfigVersion.cmake"
-#     VERSION ${PROJECT_VERSION}
-#     COMPATIBILITY AnyNewerVersion
-# )
-#
-# configure_package_config_file(
-#     "${CMAKE_CURRENT_SOURCE_DIR}/cmake/libFieldConfig.cmake.in"
-#     "${CMAKE_CURRENT_BINARY_DIR}/libFieldConfig.cmake"
-#     INSTALL_DESTINATION "lib/cmake/Field"
-# )
-#
-# install(FILES
-#     "${CMAKE_CURRENT_BINARY_DIR}/libFieldConfig.cmake"
-#     "${CMAKE_CURRENT_BINARY_DIR}/libFieldConfigVersion.cmake"
-#     DESTINATION "lib/cmake/Field"
-# )
+# Specify installation rules for the library headers
+
+install(
+  DIRECTORY src/
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+  FILES_MATCHING
+  PATTERN *.hpp
+  PATTERN *.h
+  )
+
+# Install the generated headers (i.e. version and export header)
+install(
+  DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include/
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+  FILES_MATCHING
+  PATTERN *.hpp
+  PATTERN *.h
+  )
+
+install(TARGETS Field
+    EXPORT libFieldTargets
+)
+
+install(EXPORT libFieldTargets
+    FILE libFieldTargets.cmake
+    NAMESPACE libField::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libField
+)
+
+write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/libFieldConfigVersion.cmake"
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY AnyNewerVersion
+)
+
+file(
+    WRITE ${CMAKE_CURRENT_BINARY_DIR}/libFieldConfig.cmake
+  "include(CMakeFindDependencyMacro)
+  find_dependency(Boost REQUIRED COMPONENTS headers)
+  include(\${CMAKE_CURRENT_LIST_DIR}/libFieldTargets.cmake)
+")
+
+install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/libFieldConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/libFieldConfigVersion.cmake"
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libField
+)
