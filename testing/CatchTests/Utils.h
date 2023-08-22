@@ -1,7 +1,9 @@
-#include "catch.hpp"
-
 #include <type_traits>
 #include <typeinfo>
+
+#include <catch2/catch_approx.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers.hpp>
 #ifndef _MSC_VER
 #include <cxxabi.h>
 #endif
@@ -21,17 +23,17 @@ std::string type_name()
 #endif
       std::free);
   std::string r = own != nullptr ? own.get() : typeid(TR).name();
-  if (std::is_const<TR>::value) r += " const";
-  if (std::is_volatile<TR>::value) r += " volatile";
-  if (std::is_lvalue_reference<T>::value)
+  if(std::is_const<TR>::value) r += " const";
+  if(std::is_volatile<TR>::value) r += " volatile";
+  if(std::is_lvalue_reference<T>::value)
     r += "&";
-  else if (std::is_rvalue_reference<T>::value)
+  else if(std::is_rvalue_reference<T>::value)
     r += "&&";
   return r;
 }
 
 template<typename ARRAY>
-class ArrayEqual : public Catch::MatcherBase<ARRAY>
+class ArrayEqual : public Catch::Matchers::MatcherBase<ARRAY>
 {
   ARRAY a;
 
@@ -41,10 +43,10 @@ class ArrayEqual : public Catch::MatcherBase<ARRAY>
   // Performs the test for this matcher
   bool match(ARRAY const& a_) const override
   {
-    if (a_.size() != a.size()) return false;
+    if(a_.size() != a.size()) return false;
 
-    for (size_t i = 0; i < a_.size(); i++) {
-      if (a[i] != a_[i]) {
+    for(size_t i = 0; i < a_.size(); i++) {
+      if(a[i] != a_[i]) {
         return false;
       }
     }
@@ -60,7 +62,7 @@ class ArrayEqual : public Catch::MatcherBase<ARRAY>
   {
     std::ostringstream ss;
     ss << "is same as {";
-    for (size_t i = 0; i < a.size(); i++) ss << a[i] << ", ";
+    for(size_t i = 0; i < a.size(); i++) ss << a[i] << ", ";
     ss << "}";
     return ss.str();
   }

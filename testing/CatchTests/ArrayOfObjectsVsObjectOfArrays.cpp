@@ -1,9 +1,10 @@
 #define CATCH_CONFIG_ENABLE_BENCHMARKING
-#include "catch.hpp"
-
+#include <catch2/benchmark/catch_benchmark.hpp>
+#include <catch2/catch_approx.hpp>
+#include <catch2/catch_test_macros.hpp>
 #include <libField/Field.hpp>
+
 #include "Utils.h"
-#include "fakeit.hpp"
 
 struct Node {
   double T;
@@ -32,7 +33,7 @@ struct FieldCollection {
   }
 };
 
-TEST_CASE("Array of Objects vs. Object of Arrays","[.][benchmarks]")
+TEST_CASE("Array of Objects vs. Object of Arrays", "[.][benchmarks]")
 {
   int    Nt = 1000;
   int    Nx = 1000;
@@ -44,7 +45,7 @@ TEST_CASE("Array of Objects vs. Object of Arrays","[.][benchmarks]")
     Field<Node, 1, double> Nodes(Nx);
     Nodes.getCoordinateSystem().set(Uniform(0., 10.));
 
-    for (int i = 0; i < Nx; ++i) {
+    for(int i = 0; i < Nx; ++i) {
       Nodes(i).rho   = 2;
       Nodes(i).c     = 3;
       Nodes(i).kappa = 4;
@@ -53,8 +54,8 @@ TEST_CASE("Array of Objects vs. Object of Arrays","[.][benchmarks]")
 
     BENCHMARK("Conduction")
     {
-      for (int n = 0; n < Nt; ++n) {
-        for (int i = 1; i < Nx - 1; ++i) {
+      for(int n = 0; n < Nt; ++n) {
+        for(int i = 1; i < Nx - 1; ++i) {
           Nodes(i).T = Nodes(i).kappa / (Nodes(i).rho * Nodes(i).c) *
                            (dt / dx) *
                            (Nodes(i - 1).T - 2 * Nodes(i).T + Nodes(i + 1).T) +
@@ -69,14 +70,14 @@ TEST_CASE("Array of Objects vs. Object of Arrays","[.][benchmarks]")
     FieldCollection Fields(Nx);
     Fields.T.getCoordinateSystem().set(Uniform(0., 10.));
 
-    for (int i = 0; i < Nx; i++) {
-      CHECK(Fields.rho.getCoord(i) == Approx(i * (10. / (Nx - 1))));
-      CHECK(Fields.c.getCoord(i) == Approx(i * (10. / (Nx - 1))));
-      CHECK(Fields.kappa.getCoord(i) == Approx(i * (10. / (Nx - 1))));
-      CHECK(Fields.T.getCoord(i) == Approx(i * (10. / (Nx - 1))));
+    for(int i = 0; i < Nx; i++) {
+      CHECK(Fields.rho.getCoord(i) == Catch::Approx(i * (10. / (Nx - 1))));
+      CHECK(Fields.c.getCoord(i) == Catch::Approx(i * (10. / (Nx - 1))));
+      CHECK(Fields.kappa.getCoord(i) == Catch::Approx(i * (10. / (Nx - 1))));
+      CHECK(Fields.T.getCoord(i) == Catch::Approx(i * (10. / (Nx - 1))));
     }
 
-    for (int i = 0; i < Nx; ++i) {
+    for(int i = 0; i < Nx; ++i) {
       Fields.rho(i)   = 2;
       Fields.c(i)     = 3;
       Fields.kappa(i) = 4;
@@ -85,8 +86,8 @@ TEST_CASE("Array of Objects vs. Object of Arrays","[.][benchmarks]")
 
     BENCHMARK("Conduction")
     {
-      for (int n = 0; n < Nt; ++n) {
-        for (int i = 1; i < Nx - 1; ++i) {
+      for(int n = 0; n < Nt; ++n) {
+        for(int i = 1; i < Nx - 1; ++i) {
           Fields.T(i) =
               Fields.kappa(i) / (Fields.rho(i) * Fields.c(i)) * (dt / dx) *
                   (Fields.T(i - 1) - 2 * Fields.T(i) + Fields.T(i + 1)) +

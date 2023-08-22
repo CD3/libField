@@ -1,6 +1,7 @@
 #define CATCH_CONFIG_ENABLE_BENCHMARKING
 #ifdef HAVE_GPUTILS
-#include "catch.hpp"
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/catch_approx.hpp>
 
 #include <libField/Field.hpp>
 #include <libField/IO.hpp>
@@ -27,13 +28,13 @@ TEST_CASE("Binary Read and Write")
   /*     CHECK(G.size() == 200); */
   /*     CHECK(G.size(0) == 10); */
   /*     CHECK(G.size(1) == 20); */
-  /*     CHECK(G.getCoord(0, 0)[0] == Approx(0)); */
-  /*     CHECK(G.getCoord(9, 0)[0] == Approx(2)); */
-  /*     CHECK(G.getCoord(0, 19)[1] == Approx(4)); */
-  /*     CHECK(G(0, 0) == Approx(0)); */
-  /*     CHECK(G(9, 0) == Approx(4)); */
-  /*     CHECK(G(0, 19) == Approx(16)); */
-  /*     CHECK(G(9, 19) == Approx(20)); */
+  /*     CHECK(G.getCoord(0, 0)[0] == Catch::Approx(0)); */
+  /*     CHECK(G.getCoord(9, 0)[0] == Catch::Approx(2)); */
+  /*     CHECK(G.getCoord(0, 19)[1] == Catch::Approx(4)); */
+  /*     CHECK(G(0, 0) == Catch::Approx(0)); */
+  /*     CHECK(G(9, 0) == Catch::Approx(4)); */
+  /*     CHECK(G(0, 19) == Catch::Approx(16)); */
+  /*     CHECK(G(9, 19) == Catch::Approx(20)); */
   /*   } */
 
   /*   SECTION("float out double in") */
@@ -50,13 +51,13 @@ TEST_CASE("Binary Read and Write")
   /*     CHECK(G.size() == 200); */
   /*     CHECK(G.size(0) == 10); */
   /*     CHECK(G.size(1) == 20); */
-  /*     CHECK(G.getCoord(0, 0)[0] == Approx(0)); */
-  /*     CHECK(G.getCoord(9, 0)[0] == Approx(2)); */
-  /*     CHECK(G.getCoord(0, 19)[1] == Approx(4)); */
-  /*     CHECK(G(0, 0) == Approx(0)); */
-  /*     CHECK(G(9, 0) == Approx(4)); */
-  /*     CHECK(G(0, 19) == Approx(16)); */
-  /*     CHECK(G(9, 19) == Approx(20)); */
+  /*     CHECK(G.getCoord(0, 0)[0] == Catch::Approx(0)); */
+  /*     CHECK(G.getCoord(9, 0)[0] == Catch::Approx(2)); */
+  /*     CHECK(G.getCoord(0, 19)[1] == Catch::Approx(4)); */
+  /*     CHECK(G(0, 0) == Catch::Approx(0)); */
+  /*     CHECK(G(9, 0) == Catch::Approx(4)); */
+  /*     CHECK(G(0, 19) == Catch::Approx(16)); */
+  /*     CHECK(G(9, 19) == Catch::Approx(20)); */
   /*   } */
   /* } */
 

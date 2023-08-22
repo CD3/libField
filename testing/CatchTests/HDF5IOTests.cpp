@@ -1,6 +1,7 @@
 #define CATCH_CONFIG_ENABLE_BENCHMARKING
 #ifdef HAVE_HDF5_CPP
-#include "catch.hpp"
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/catch_approx.hpp>
 
 #include <libField/Field.hpp>
 #include <libField/HDF5.hpp>
@@ -23,10 +24,10 @@ TEST_CASE("HDF5 Read and Write")
       hdf5read("1D-Field.h5", G);
 
       CHECK(G.size() == 10);
-      CHECK(G.getCoord(0) == Approx(0));
-      CHECK(G.getCoord(9) == Approx(2));
-      CHECK(G(0) == Approx(0));
-      CHECK(G(9) == Approx(4));
+      CHECK(G.getCoord(0) == Catch::Approx(0));
+      CHECK(G.getCoord(9) == Catch::Approx(2));
+      CHECK(G(0) == Catch::Approx(0));
+      CHECK(G(9) == Catch::Approx(4));
     }
 
     SECTION("double/float out float/double in")
@@ -41,10 +42,10 @@ TEST_CASE("HDF5 Read and Write")
       hdf5read("1D-Field.h5", G);
 
       CHECK(G.size() == 10);
-      CHECK(G.getCoord(0) == Approx(0));
-      CHECK(G.getCoord(9) == Approx(2));
-      CHECK(G(0) == Approx(0));
-      CHECK(G(9) == Approx(4));
+      CHECK(G.getCoord(0) == Catch::Approx(0));
+      CHECK(G.getCoord(9) == Catch::Approx(2));
+      CHECK(G(0) == Catch::Approx(0));
+      CHECK(G(9) == Catch::Approx(4));
     }
 
     SECTION("writing to groups")
@@ -85,13 +86,13 @@ TEST_CASE("HDF5 Read and Write")
       CHECK(G.size() == 200);
       CHECK(G.size(0) == 10);
       CHECK(G.size(1) == 20);
-      CHECK(G.getCoord(0, 0)[0] == Approx(0));
-      CHECK(G.getCoord(9, 0)[0] == Approx(2));
-      CHECK(G.getCoord(0, 19)[1] == Approx(4));
-      CHECK(G(0, 0) == Approx(0));
-      CHECK(G(9, 0) == Approx(4));
-      CHECK(G(0, 19) == Approx(16));
-      CHECK(G(9, 19) == Approx(20));
+      CHECK(G.getCoord(0, 0)[0] == Catch::Approx(0));
+      CHECK(G.getCoord(9, 0)[0] == Catch::Approx(2));
+      CHECK(G.getCoord(0, 19)[1] == Catch::Approx(4));
+      CHECK(G(0, 0) == Catch::Approx(0));
+      CHECK(G(9, 0) == Catch::Approx(4));
+      CHECK(G(0, 19) == Catch::Approx(16));
+      CHECK(G(9, 19) == Catch::Approx(20));
     }
 
     SECTION("float out double in")
@@ -108,13 +109,13 @@ TEST_CASE("HDF5 Read and Write")
       CHECK(G.size() == 200);
       CHECK(G.size(0) == 10);
       CHECK(G.size(1) == 20);
-      CHECK(G.getCoord(0, 0)[0] == Approx(0));
-      CHECK(G.getCoord(9, 0)[0] == Approx(2));
-      CHECK(G.getCoord(0, 19)[1] == Approx(4));
-      CHECK(G(0, 0) == Approx(0));
-      CHECK(G(9, 0) == Approx(4));
-      CHECK(G(0, 19) == Approx(16));
-      CHECK(G(9, 19) == Approx(20));
+      CHECK(G.getCoord(0, 0)[0] == Catch::Approx(0));
+      CHECK(G.getCoord(9, 0)[0] == Catch::Approx(2));
+      CHECK(G.getCoord(0, 19)[1] == Catch::Approx(4));
+      CHECK(G(0, 0) == Catch::Approx(0));
+      CHECK(G(9, 0) == Catch::Approx(4));
+      CHECK(G(0, 19) == Catch::Approx(16));
+      CHECK(G(9, 19) == Catch::Approx(20));
     }
   }
 
@@ -275,12 +276,12 @@ TEST_CASE("HDF5 Read and Write")
       auto             dset = file.openDataSet("Small 1D Array");
       hdf5read(dset, f);
       CHECK(f.size() == 10);
-      CHECK(f(0) == Approx(0));
-      CHECK(f(1) == Approx(1));
-      CHECK(f(9) == Approx(9));
+      CHECK(f(0) == Catch::Approx(0));
+      CHECK(f(1) == Catch::Approx(1));
+      CHECK(f(9) == Catch::Approx(9));
 
-      CHECK(f.getAxis(0)[0] == Approx(0));
-      CHECK(f.getAxis(0)[9] == Approx(9));
+      CHECK(f.getAxis(0)[0] == Catch::Approx(0));
+      CHECK(f.getAxis(0)[9] == Catch::Approx(9));
     }
     SECTION("2D Field")
     {
@@ -290,16 +291,16 @@ TEST_CASE("HDF5 Read and Write")
       CHECK(f.size() == 15);
       CHECK(f.size(0) == 3);
       CHECK(f.size(1) == 5);
-      CHECK(f(0, 0) == Approx(0));
-      CHECK(f(1, 0) == Approx(1));
-      CHECK(f(0, 1) == Approx(1));
-      CHECK(f(1, 1) == Approx(2));
-      CHECK(f(2, 4) == Approx(6));
+      CHECK(f(0, 0) == Catch::Approx(0));
+      CHECK(f(1, 0) == Catch::Approx(1));
+      CHECK(f(0, 1) == Catch::Approx(1));
+      CHECK(f(1, 1) == Catch::Approx(2));
+      CHECK(f(2, 4) == Catch::Approx(6));
 
-      CHECK(f.getAxis(0)[0] == Approx(0));
-      CHECK(f.getAxis(0)[2] == Approx(2));
-      CHECK(f.getAxis(1)[0] == Approx(0));
-      CHECK(f.getAxis(1)[4] == Approx(4));
+      CHECK(f.getAxis(0)[0] == Catch::Approx(0));
+      CHECK(f.getAxis(0)[2] == Catch::Approx(2));
+      CHECK(f.getAxis(1)[0] == Catch::Approx(0));
+      CHECK(f.getAxis(1)[4] == Catch::Approx(4));
     }
 
     SECTION("3D Field")
@@ -311,18 +312,18 @@ TEST_CASE("HDF5 Read and Write")
       CHECK(f.size(0) == 2);
       CHECK(f.size(1) == 3);
       CHECK(f.size(2) == 4);
-      CHECK(f(0, 0, 0) == Approx(0));
-      CHECK(f(1, 0, 0) == Approx(1));
-      CHECK(f(0, 1, 0) == Approx(1));
-      CHECK(f(1, 1, 1) == Approx(3));
-      CHECK(f(1, 2, 3) == Approx(6));
+      CHECK(f(0, 0, 0) == Catch::Approx(0));
+      CHECK(f(1, 0, 0) == Catch::Approx(1));
+      CHECK(f(0, 1, 0) == Catch::Approx(1));
+      CHECK(f(1, 1, 1) == Catch::Approx(3));
+      CHECK(f(1, 2, 3) == Catch::Approx(6));
 
-      CHECK(f.getAxis(0)[0] == Approx(0));
-      CHECK(f.getAxis(0)[1] == Approx(1));
-      CHECK(f.getAxis(1)[0] == Approx(0));
-      CHECK(f.getAxis(1)[2] == Approx(2));
-      CHECK(f.getAxis(2)[0] == Approx(0));
-      CHECK(f.getAxis(2)[3] == Approx(3));
+      CHECK(f.getAxis(0)[0] == Catch::Approx(0));
+      CHECK(f.getAxis(0)[1] == Catch::Approx(1));
+      CHECK(f.getAxis(1)[0] == Catch::Approx(0));
+      CHECK(f.getAxis(1)[2] == Catch::Approx(2));
+      CHECK(f.getAxis(2)[0] == Catch::Approx(0));
+      CHECK(f.getAxis(2)[3] == Catch::Approx(3));
     }
     file.close();
   }
@@ -405,31 +406,31 @@ TEST_CASE("HDF5 Read and Write")
 
     hdf5read("MultipleFieldWrite.h5", "1D/Tvst", _1DF);
     CHECK(_1DF.size() == 10);
-    CHECK(_1DF.getAxis(0)[0] == Approx(0));
-    CHECK(_1DF.getAxis(0)[9] == Approx(2));
+    CHECK(_1DF.getAxis(0)[0] == Catch::Approx(0));
+    CHECK(_1DF.getAxis(0)[9] == Catch::Approx(2));
 
     hdf5read("MultipleFieldWrite.h5", "1D/Uvst", _1DF);
     CHECK(_1DF.size() == 20);
-    CHECK(_1DF.getAxis(0)[0] == Approx(0));
-    CHECK(_1DF.getAxis(0)[19] == Approx(1));
+    CHECK(_1DF.getAxis(0)[0] == Catch::Approx(0));
+    CHECK(_1DF.getAxis(0)[19] == Catch::Approx(1));
 
     hdf5read("MultipleFieldWrite.h5", "2D/Evst", _2DF);
     CHECK(_2DF.size() == 100);
     CHECK(_2DF.size(0) == 10);
     CHECK(_2DF.size(1) == 10);
-    CHECK(_2DF.getAxis(0)[0] == Approx(0));
-    CHECK(_2DF.getAxis(0)[9] == Approx(2));
-    CHECK(_2DF.getAxis(1)[0] == Approx(0));
-    CHECK(_2DF.getAxis(1)[9] == Approx(3));
+    CHECK(_2DF.getAxis(0)[0] == Catch::Approx(0));
+    CHECK(_2DF.getAxis(0)[9] == Catch::Approx(2));
+    CHECK(_2DF.getAxis(1)[0] == Catch::Approx(0));
+    CHECK(_2DF.getAxis(1)[9] == Catch::Approx(3));
 
     hdf5read("MultipleFieldWrite.h5", "2D/Fvst", _2DF);
     CHECK(_2DF.size() == 200);
     CHECK(_2DF.size(0) == 20);
     CHECK(_2DF.size(1) == 10);
-    CHECK(_2DF.getAxis(0)[0] == Approx(-1));
-    CHECK(_2DF.getAxis(0)[19] == Approx(1));
-    CHECK(_2DF.getAxis(1)[0] == Approx(0));
-    CHECK(_2DF.getAxis(1)[9] == Approx(2));
+    CHECK(_2DF.getAxis(0)[0] == Catch::Approx(-1));
+    CHECK(_2DF.getAxis(0)[19] == Catch::Approx(1));
+    CHECK(_2DF.getAxis(1)[0] == Catch::Approx(0));
+    CHECK(_2DF.getAxis(1)[9] == Catch::Approx(2));
 
   }
 }

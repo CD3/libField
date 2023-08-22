@@ -1,4 +1,5 @@
-#include "catch.hpp"
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/catch_approx.hpp>
 
 #include <iostream>
 
@@ -11,8 +12,8 @@ TEST_CASE("Tutorial : 2D Temperature", "[tutorial]")
   T.setCoordinateSystem(Uniform(-3, 3), Uniform(0, 10));
   T.set(0.0);
 
-  CHECK(T.getCoord(1, 1)[0] == Approx(-3 + 6. / 9));
-  CHECK(T.getCoord(1, 1)[1] == Approx(10. / 14));
+  CHECK(T.getCoord(1, 1)[0] == Catch::Approx(-3 + 6. / 9));
+  CHECK(T.getCoord(1, 1)[1] == Catch::Approx(10. / 14));
 
   // std::cout << T << std::endl;
 

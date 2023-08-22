@@ -1,17 +1,17 @@
-#include "catch.hpp"
-
+#include <catch2/catch_approx.hpp>
+#include <catch2/catch_test_macros.hpp>
 #include <libField/CoordinateSystem.hpp>
+
 #include "Utils.h"
-#include "fakeit.hpp"
 
 using namespace boost;
 
 TEST_CASE("CoordinateSystem Usage")
 {
-  int    Nx = 11, Ny = 6, Nz = 21;
-  double xmin = 0, xmax = 10, dx = (xmax - xmin) / (Nx - 1);
-  double ymin = 0, ymax = 10, dy = (ymax - ymin) / (Ny - 1);
-  double zmin = 0, zmax = 10, dz = (zmax - zmin) / (Nz - 1);
+  std::size_t Nx = 11, Ny = 6, Nz = 21;
+  double      xmin = 0, xmax = 10, dx = (xmax - xmin) / (Nx - 1);
+  double      ymin = 0, ymax = 10, dy = (ymax - ymin) / (Ny - 1);
+  double      zmin = 0, zmax = 10, dz = (zmax - zmin) / (Nz - 1);
 
   CoordinateSystem<double, 3> Coordinates(Nx, Ny, Nz);
 
@@ -24,20 +24,20 @@ TEST_CASE("CoordinateSystem Usage")
   Coordinates.set(Uniform(xmin, xmax), Uniform(ymin, ymax),
                   Uniform(zmin, zmax));
 
-  for (int i = 0; i < Nx; i++)
-    CHECK(Coordinates[0][i] == Approx(xmin + i * dx));
-  for (int i = 0; i < Ny; i++)
-    CHECK(Coordinates[1][i] == Approx(ymin + i * dy));
-  for (int i = 0; i < Nz; i++)
-    CHECK(Coordinates[2][i] == Approx(zmin + i * dz));
+  for(std::size_t i = 0; i < Nx; i++)
+    CHECK(Coordinates[0][i] == Catch::Approx(xmin + i * dx));
+  for(std::size_t i = 0; i < Ny; i++)
+    CHECK(Coordinates[1][i] == Catch::Approx(ymin + i * dy));
+  for(std::size_t i = 0; i < Nz; i++)
+    CHECK(Coordinates[2][i] == Catch::Approx(zmin + i * dz));
 
-  for (int i = 0; i < Nx; i++)
-    for (int j = 0; j < Ny; j++)
-      for (int k = 0; k < Nz; k++) {
+  for(std::size_t i = 0; i < Nx; i++)
+    for(std::size_t j = 0; j < Ny; j++)
+      for(std::size_t k = 0; k < Nz; k++) {
         auto X = Coordinates.getCoord(i, j, k);
-        CHECK(X[0] == Approx(xmin + i * dx));
-        CHECK(X[1] == Approx(ymin + j * dy));
-        CHECK(X[2] == Approx(zmin + k * dz));
+        CHECK(X[0] == Catch::Approx(xmin + i * dx));
+        CHECK(X[1] == Catch::Approx(ymin + j * dy));
+        CHECK(X[2] == Catch::Approx(zmin + k * dz));
       }
 
   CHECK(Coordinates[0][0] != -1);
@@ -72,11 +72,11 @@ TEST_CASE("CoordinateSystem Usage")
 
   // we can also pass in shared pointers for the axes.
   typedef CoordinateSystem<double, 3>::axis_type axis_type;
-  int                                            NNx = 20;
-  int                                            NNy = 5;
-  int                                            NNz = Ny;
-  std::shared_ptr<axis_type>                     x = std::make_shared<axis_type>(extents[NNx]);
-  for (int i = 0; i < NNx; i++) {
+  std::size_t                                    NNx = 20;
+  std::size_t                                    NNy = 5;
+  std::size_t                                    NNz = Ny;
+  std::shared_ptr<axis_type>                     x   = std::make_shared<axis_type>(extents[NNx]);
+  for(std::size_t i = 0; i < NNx; i++) {
     x->operator[](i) = 2 * i;
   }
   CoordinateSystem<double, 3> Coordinates2(x, NNy, Coordinates.getAxisPtr(1));
@@ -88,19 +88,19 @@ TEST_CASE("CoordinateSystem Usage")
   CHECK(Coordinates2.size(-1) == NNx * NNy * NNz);
 
   // y axis has not been set yet, but the x and z axis are
-  for (int i = 0; i < NNx; i++) CHECK(Coordinates2[0][i] == Approx(2 * i));
-  for (int i = 0; i < NNz; i++)
+  for(std::size_t i = 0; i < NNx; i++) CHECK(Coordinates2[0][i] == Catch::Approx(2 * i));
+  for(std::size_t i = 0; i < NNz; i++)
     CHECK(Coordinates2[2][i] ==
-          Approx(ymin + i * dy));  // z axis is a reference to the first y axis
+          Catch::Approx(ymin + i * dy));  // z axis is a reference to the first y axis
 
   // set the y axis, but leave the others along
   Coordinates2.set(none, Uniform<double>(-5, 5), none);
 
-  for (int i = 0; i < NNx; i++) CHECK(Coordinates2[0][i] == Approx(2 * i));
-  for (int i = 0; i < NNy; i++)
-    CHECK(Coordinates2[1][i] == Approx(-5 + i * 10. / (NNy - 1)));
-  for (int i = 0; i < NNy; i++)
-    CHECK(Coordinates2[2][i] == Approx(ymin + i * dy));
+  for(std::size_t i = 0; i < NNx; i++) CHECK(Coordinates2[0][i] == Catch::Approx(2 * i));
+  for(std::size_t i = 0; i < NNy; i++)
+    CHECK(Coordinates2[1][i] == Catch::Approx(-5 + i * 10. / (NNy - 1)));
+  for(std::size_t i = 0; i < NNy; i++)
+    CHECK(Coordinates2[2][i] == Catch::Approx(ymin + i * dy));
 
   auto ind2 = Coordinates2.lower_bound(0.1, 0.1, 0.1);
   CHECK(ind2[0] == 0);
@@ -129,14 +129,14 @@ TEST_CASE("CoordinateSystem Range Setting")
 
   Coordinates.set(Uniform(1, 10), Geometric(0., 1., 2), Geometric(1., 0.1, 1.1));
 
-  for (int i = 0; i < 10; i++)
-    CHECK(Coordinates.getAxis(0)[i] == Approx(1 + i));
+  for(std::size_t i = 0; i < 10; i++)
+    CHECK(Coordinates.getAxis(0)[i] == Catch::Approx(1 + i));
 
   double x  = 0;
   double dx = 1;
   double s  = 2;
-  for (int i = 0; i < 10; i++) {
-    CHECK(Coordinates.getAxis(1)[i] == Approx(x));
+  for(std::size_t i = 0; i < 10; i++) {
+    CHECK(Coordinates.getAxis(1)[i] == Catch::Approx(x));
     x += dx;
     dx *= s;
   }
@@ -144,10 +144,10 @@ TEST_CASE("CoordinateSystem Range Setting")
 
 TEST_CASE("CoordinateSystem Slicing")
 {
-  int    Nx = 11, Ny = 6, Nz = 21;
-  double xmin = 0, xmax = 10, dx = (xmax - xmin) / (Nx - 1);
-  double ymin = 0, ymax = 10, dy = (ymax - ymin) / (Ny - 1);
-  double zmin = 0, zmax = 10, dz = (zmax - zmin) / (Nz - 1);
+  std::size_t Nx = 11, Ny = 6, Nz = 21;
+  double      xmin = 0, xmax = 10, dx = (xmax - xmin) / (Nx - 1);
+  double      ymin = 0, ymax = 10, dy = (ymax - ymin) / (Ny - 1);
+  double      zmin = 0, zmax = 10, dz = (zmax - zmin) / (Nz - 1);
 
   CoordinateSystem<double, 3> Coordinates(Nx, Ny, Nz);
 
@@ -155,16 +155,16 @@ TEST_CASE("CoordinateSystem Slicing")
                   Uniform(zmin, zmax));
 
   REQUIRE(Coordinates[0].size() == Nx);
-  for (int i = 0; i < Nx; i++)
-    CHECK(Coordinates[0][i] == Approx(xmin + i * dx));
+  for(std::size_t i = 0; i < Nx; i++)
+    CHECK(Coordinates[0][i] == Catch::Approx(xmin + i * dx));
 
   REQUIRE(Coordinates[1].size() == Ny);
-  for (int i = 0; i < Ny; i++)
-    CHECK(Coordinates[1][i] == Approx(ymin + i * dy));
+  for(std::size_t i = 0; i < Ny; i++)
+    CHECK(Coordinates[1][i] == Catch::Approx(ymin + i * dy));
 
   REQUIRE(Coordinates[2].size() == Nz);
-  for (int i = 0; i < Nz; i++)
-    CHECK(Coordinates[2][i] == Approx(zmin + i * dz));
+  for(std::size_t i = 0; i < Nz; i++)
+    CHECK(Coordinates[2][i] == Catch::Approx(zmin + i * dz));
 
   auto ind = Coordinates.lower_bound(2, 3, 4);
   CHECK(ind[0] == 2);
@@ -175,11 +175,11 @@ TEST_CASE("CoordinateSystem Slicing")
       Coordinates.slice(indices[index_range()][2][index_range()]);
 
   REQUIRE(Coordinates2[0].size() == Nx);
-  for (int i = 0; i < Nx; i++)
-    CHECK(Coordinates2[0][i] == Approx(xmin + i * dx));
+  for(std::size_t i = 0; i < Nx; i++)
+    CHECK(Coordinates2[0][i] == Catch::Approx(xmin + i * dx));
   REQUIRE(Coordinates2[1].size() == Nz);
-  for (int i = 0; i < Nz; i++)
-    CHECK(Coordinates2[1][i] == Approx(zmin + i * dz));
+  for(std::size_t i = 0; i < Nz; i++)
+    CHECK(Coordinates2[1][i] == Catch::Approx(zmin + i * dz));
 
   auto ind2 = Coordinates2.lower_bound(2, 4);
   CHECK(ind2[0] == 2);
@@ -193,8 +193,8 @@ TEST_CASE("CoordinateSystem Slicing")
   CHECK(ind3[1] == 3);
 
   REQUIRE(Coordinates3[0].size() == Nx - 2);
-  for (int i = 2; i < Nx; i++)
-    CHECK(Coordinates3[0][i - 2] == Approx(xmin + i * dx));
+  for(std::size_t i = 2; i < Nx; i++)
+    CHECK(Coordinates3[0][i - 2] == Catch::Approx(xmin + i * dx));
 
   REQUIRE(Coordinates3[1].size() == 5);
   CHECK(Coordinates3[1][0] == zmin + dz);
@@ -339,24 +339,24 @@ TEST_CASE("getCoord Interface")
     CoordinateSystem<double, 1> Coordinates(11);
     Coordinates.set(Uniform(5, 6));
 
-    CHECK(Coordinates[0][0] == Approx(5));
-    CHECK(Coordinates[0][1] == Approx(5.1));
+    CHECK(Coordinates[0][0] == Catch::Approx(5));
+    CHECK(Coordinates[0][1] == Catch::Approx(5.1));
 
     {
       auto x = Coordinates.getCoord(5);
-      CHECK(x == Approx(5.5));
+      CHECK(x == Catch::Approx(5.5));
     }
 
     {
       std::array<int, 1> ind{5};
       auto               x = Coordinates.getCoord(ind[0]);
-      CHECK(x == Approx(5.5));
+      CHECK(x == Catch::Approx(5.5));
     }
 
     {
       std::array<int, 1> ind{5};
       auto               x = Coordinates.getCoord(ind);
-      CHECK(x[0] == Approx(5.5));
+      CHECK(x[0] == Catch::Approx(5.5));
     }
   }
   SECTION("2D Interface") {}

@@ -1,6 +1,7 @@
 #define CATCH_CONFIG_ENABLE_BENCHMARKING
 #ifdef HAVE_HDF5_CPP
-#include "catch.hpp"
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/catch_approx.hpp>
 
 #include <libField/Field.hpp>
 

@@ -1,5 +1,6 @@
 #if SERIALIZATION_ENABLED
-#include "catch.hpp"
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/catch_approx.hpp>
 
 #include <fstream>
 #include <sstream>
@@ -11,7 +12,6 @@
 #include "Field.hpp"
 #include "Serialization.hpp"
 #include "Utils.h"
-#include "fakeit.hpp"
 
 using namespace boost;
 
@@ -21,7 +21,7 @@ TEST_CASE("MultiArray Serialization - 1D")
 
   boost::multi_array<double, 1> a(extents[10]), b;
 
-  for (int i = 0; i < 10; i++) {
+  for(int i = 0; i < 10; i++) {
     a[i] = 10 * i;
   }
 
@@ -30,7 +30,7 @@ TEST_CASE("MultiArray Serialization - 1D")
   boost::archive::text_iarchive ia(ss);
   ia >> b;
 
-  for (int i = 0; i < 10; i++) {
+  for(int i = 0; i < 10; i++) {
     CHECK(b[i] == a[i]);
   }
 }
@@ -43,8 +43,8 @@ TEST_CASE("MultiArray Serialization - 2D")
   {
     boost::multi_array<double, 2> a(extents[10][20]), b;
 
-    for (int i = 0; i < 10; i++) {
-      for (int j = 0; j < 20; j++) {
+    for(int i = 0; i < 10; i++) {
+      for(int j = 0; j < 20; j++) {
         a[i][j] = 2 * i + 2 * j;
       }
     }
@@ -54,8 +54,8 @@ TEST_CASE("MultiArray Serialization - 2D")
     boost::archive::text_iarchive ia(ss);
     ia >> b;
 
-    for (int i = 0; i < 10; i++) {
-      for (int j = 0; j < 20; j++) {
+    for(int i = 0; i < 10; i++) {
+      for(int j = 0; j < 20; j++) {
         CHECK(b[i][j] == a[i][j]);
       }
     }
@@ -65,8 +65,8 @@ TEST_CASE("MultiArray Serialization - 2D")
   {
     boost::multi_array<double, 2> a(extents[10][20]), b;
 
-    for (int i = 0; i < 10; i++) {
-      for (int j = 0; j < 20; j++) {
+    for(int i = 0; i < 10; i++) {
+      for(int j = 0; j < 20; j++) {
         a[i][j] = 10 * i + j;
       }
     }
@@ -78,8 +78,8 @@ TEST_CASE("MultiArray Serialization - 2D")
     boost::archive::text_iarchive ia(ss);
     ia >> b;
 
-    for (int i = 0 + 1; i < 10 + 1; i++) {
-      for (int j = 0 + 2; j < 20 + 2; j++) {
+    for(int i = 0 + 1; i < 10 + 1; i++) {
+      for(int j = 0 + 2; j < 20 + 2; j++) {
         CHECK(b[i][j] == a[i][j]);
       }
     }
@@ -90,8 +90,8 @@ TEST_CASE("MultiArray Serialization - 2D")
     boost::multi_array<double, 2> a(extents[10][20], fortran_storage_order()),
         b;
 
-    for (int i = 0; i < 10; i++) {
-      for (int j = 0; j < 20; j++) {
+    for(int i = 0; i < 10; i++) {
+      for(int j = 0; j < 20; j++) {
         a[i][j] = 10 * i + j;
       }
     }
@@ -101,8 +101,8 @@ TEST_CASE("MultiArray Serialization - 2D")
     boost::archive::text_iarchive ia(ss);
     ia >> b;
 
-    for (int i = 0; i < 10; i++) {
-      for (int j = 0; j < 20; j++) {
+    for(int i = 0; i < 10; i++) {
+      for(int j = 0; j < 20; j++) {
         CHECK(b[i][j] == a[i][j]);
       }
     }
@@ -116,8 +116,8 @@ TEST_CASE("MultiArray Serialization - 2D")
         b;
     // boost::multi_array<double,2> a(extents[10][20]), b;
 
-    for (int i = 0; i < 10; i++) {
-      for (int j = 0; j < 20; j++) {
+    for(int i = 0; i < 10; i++) {
+      for(int j = 0; j < 20; j++) {
         a[i][j] = 10 * i + j;
       }
     }
@@ -129,8 +129,8 @@ TEST_CASE("MultiArray Serialization - 2D")
     boost::archive::text_iarchive ia(ss);
     ia >> b;
 
-    for (int i = 0 + 1; i < 10 + 1; i++) {
-      for (int j = 0 + 2; j < 20 + 2; j++) {
+    for(int i = 0 + 1; i < 10 + 1; i++) {
+      for(int j = 0 + 2; j < 20 + 2; j++) {
         CHECK(b[i][j] == a[i][j]);
       }
     }
@@ -141,9 +141,9 @@ TEST_CASE("MultiArray Serialization - 3D")
 {
   boost::multi_array<double, 3> a(extents[10][20][30]), b;
 
-  for (int i = 0; i < 10; i++) {
-    for (int j = 0; j < 20; j++) {
-      for (int k = 0; k < 30; k++) {
+  for(int i = 0; i < 10; i++) {
+    for(int j = 0; j < 20; j++) {
+      for(int k = 0; k < 30; k++) {
         a[i][j][k] = 2 * i + 2 * j + 2 * k;
       }
     }
@@ -156,9 +156,9 @@ TEST_CASE("MultiArray Serialization - 3D")
   boost::archive::text_iarchive ia(ss);
   ia >> b;
 
-  for (int i = 0; i < 10; i++) {
-    for (int j = 0; j < 20; j++) {
-      for (int k = 0; k < 30; k++) {
+  for(int i = 0; i < 10; i++) {
+    for(int j = 0; j < 20; j++) {
+      for(int k = 0; k < 30; k++) {
         CHECK(b[i][j][k] == a[i][j][k]);
       }
     }
@@ -170,9 +170,9 @@ TEST_CASE("CoordinateSystem Serialization")
   CoordinateSystem<double, 3> Coordinates(11, 11, 11);
   Coordinates.set(Uniform(0, 10), Uniform(10, 20), Uniform(20, 30));
 
-  for (int i = 0; i < 10; i++) CHECK(Coordinates[0][i] == 0 + i);
-  for (int i = 0; i < 10; i++) CHECK(Coordinates[1][i] == 10 + i);
-  for (int i = 0; i < 10; i++) CHECK(Coordinates[2][i] == 20 + i);
+  for(int i = 0; i < 10; i++) CHECK(Coordinates[0][i] == 0 + i);
+  for(int i = 0; i < 10; i++) CHECK(Coordinates[1][i] == 10 + i);
+  for(int i = 0; i < 10; i++) CHECK(Coordinates[2][i] == 20 + i);
 
   std::ofstream                 out("coordsys-ar.txt");
   boost::archive::text_oarchive oa(out);
@@ -186,9 +186,9 @@ TEST_CASE("CoordinateSystem Serialization")
   ia >> Coordinates2;
   in.close();
 
-  for (int i = 0; i < 10; i++) CHECK(Coordinates2[0][i] == 0 + i);
-  for (int i = 0; i < 10; i++) CHECK(Coordinates2[1][i] == 10 + i);
-  for (int i = 0; i < 10; i++) CHECK(Coordinates2[2][i] == 20 + i);
+  for(int i = 0; i < 10; i++) CHECK(Coordinates2[0][i] == 0 + i);
+  for(int i = 0; i < 10; i++) CHECK(Coordinates2[1][i] == 10 + i);
+  for(int i = 0; i < 10; i++) CHECK(Coordinates2[2][i] == 20 + i);
 }
 
 TEST_CASE("Field Serialization")
@@ -198,9 +198,9 @@ TEST_CASE("Field Serialization")
   T.getCoordinateSystem().set(Uniform(0., 10.), Uniform(0., 10.),
                               Uniform(0., 10.));
 
-  for (int i = 0; i < Nx; ++i) {
-    for (int j = 0; j < Ny; ++j) {
-      for (int k = 0; k < Nz; ++k) {
+  for(int i = 0; i < Nx; ++i) {
+    for(int j = 0; j < Ny; ++j) {
+      for(int k = 0; k < Nz; ++k) {
         auto x     = T.getCoord(i, j, k);
         T[i][j][k] = x[0] * x[1] * x[2];
       }
@@ -219,20 +219,20 @@ TEST_CASE("Field Serialization")
   ia >> T2;
   in.close();
 
-  for (int i = 0; i < Nx; ++i) {
-    for (int j = 0; j < Ny; ++j) {
-      for (int k = 0; k < Nz; ++k) {
+  for(int i = 0; i < Nx; ++i) {
+    for(int j = 0; j < Ny; ++j) {
+      for(int k = 0; k < Nz; ++k) {
         auto X = T2.getCoord(i, j, k);
-        CHECK(X[0] == Approx(i * 1.0));
-        CHECK(X[1] == Approx(j * 2.0));
-        CHECK(X[2] == Approx(k * 0.5));
+        CHECK(X[0] == Catch::Approx(i * 1.0));
+        CHECK(X[1] == Catch::Approx(j * 2.0));
+        CHECK(X[2] == Catch::Approx(k * 0.5));
 
         auto F = T2.getCoordinateSystem()[0][i] *
                  T2.getCoordinateSystem()[1][j] *
                  T2.getCoordinateSystem()[2][k];
 
         // this is slow, but looks nice
-        CHECK(T2(i, j, k) == Approx(F));
+        CHECK(T2(i, j, k) == Catch::Approx(F));
       }
     }
   }

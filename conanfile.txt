@@ -1,6 +1,10 @@
 [generators]
-virtualenv
+CMakeDeps
+CMakeToolchain
+
 [requires]
-boost/1.69.0
-hdf5/1.10.5@cd3/devel
-gp-utils/0.1@cd3/devel
+boost/1.80.0
+catch2/3.3.1
+
+[layout]
+cmake_layout
